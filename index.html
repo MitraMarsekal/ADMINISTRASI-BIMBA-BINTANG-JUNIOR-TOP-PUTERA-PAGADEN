@@ -1,537 +1,775 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Administrasi - Bimba Bintang Junior Top Putera</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrasi Bimba Bintang Junior Top Putera</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    .sidebar { min-height: 100vh; background: #1e3a8a; color: white; }
-    .sidebar .nav-link { color: #dbeafe; margin-bottom: 5px; border-radius: 6px; cursor: pointer; }
-    .sidebar .nav-link:hover, .sidebar .nav-link.active { background: #2563eb; color: white; font-weight: 600; }
-    .card-header-custom { background: #1e3a8a; color: white; }
-    
-    /* Desain Bingkai Ijazah */
-    .ijazah-box {
-      border: 12px double #1e3a8a;
-      padding: 40px;
-      background: #fffdf7;
-      position: relative;
-      color: #1f2937;
-    }
-    .ijazah-title { font-family: 'Georgia', serif; letter-spacing: 3px; color: #1e3a8a; font-weight: bold; }
     @media print {
-      body * { visibility: hidden; }
-      #areaCetakIjazah, #areaCetakIjazah * { visibility: visible; }
-      #areaCetakIjazah { position: absolute; left: 0; top: 0; width: 100%; }
       .no-print { display: none !important; }
+      body { background: white !important; }
+      #receipt-modal { position: static !important; background: none !important; }
+      #receipt-box { box-shadow: none !important; border: 1px solid #ccc !important; width: 100% !important; max-width: 100% !important; }
     }
   </style>
 </head>
-<body>
+<body class="bg-slate-100 text-slate-800 font-sans">
 
-<!-- HALAMAN LOGIN & REGISTRASI -->
-<div id="authSection" class="container d-flex justify-content-center align-items-center min-vh-100">
-  <div class="card shadow-lg border-0" style="max-width: 430px; width: 100%;">
-    <div class="card-header card-header-custom text-center py-4">
-      <h5 class="mb-1 fw-bold">BIMBA BINTANG JUNIOR</h5>
-      <small class="text-warning">UNIT TOP PUTERA - ADMINISTRASI</small>
-    </div>
-    <div class="card-body p-4">
+  <script>
+    // TEMPEL URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI:
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxwDTzX4uVd6RCn3qJwYoDFfXhzYCcLhptXZrrRGXQl5-IrfJ-AC3KtNHqN4rzgHcY2-A/exec";
+  </script>
+
+  <!-- ==================== HALAMAN LOGIN & REGISTRASI ==================== -->
+  <div id="auth-screen" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-sky-600 to-indigo-800">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
+      <div class="text-center mb-6">
+        <span class="inline-block bg-sky-100 text-sky-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Unit Top Putera Pagaden</span>
+        <h1 class="text-2xl font-extrabold text-slate-800 mt-2">BIMBA BINTANG JUNIOR</h1>
+        <p class="text-sm text-slate-500">Sistem Administrasi & Keuangan Terpadu</p>
+      </div>
+
       <!-- Form Login -->
-      <form id="loginForm">
-        <h6 class="text-center mb-3 fw-bold text-secondary">Masuk ke Sistem</h6>
-        <div class="mb-3">
-          <label class="form-label">Username</label>
-          <input type="text" id="loginUser" class="form-control" required placeholder="Masukkan username">
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold mb-1">Username</label>
+          <input type="text" id="login-user" required class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none" placeholder="Masukkan username" />
         </div>
-        <div class="mb-3">
-          <label class="form-label">Password</label>
-          <input type="password" id="loginPass" class="form-control" required placeholder="Masukkan password">
+        <div>
+          <label class="block text-sm font-semibold mb-1">Password</label>
+          <input type="password" id="login-pass" required class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none" placeholder="••••••••" />
         </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold" id="btnLogin">
-          <i class="fas fa-sign-in-alt me-1"></i> Masuk
+        <button type="submit" id="btn-login" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 rounded-lg transition">
+          Masuk Aplikasi
         </button>
-        <div class="text-center mt-3">
-          <a href="#" onclick="toggleAuth('register')" class="small text-decoration-none">Belum punya akun? Daftar untuk persetujuan Admin</a>
-        </div>
+        <p class="text-xs text-center text-slate-500 pt-2">
+          Belum punya akun? <button type="button" onclick="toggleAuthMode(true)" class="text-sky-600 font-semibold hover:underline">Ajukan Akses ke Admin</button>
+        </p>
       </form>
 
-      <!-- Form Daftar Akun Baru -->
-      <form id="registerForm" class="d-none">
-        <h6 class="text-center mb-3 fw-bold text-secondary">Daftar Akun Baru</h6>
-        <div class="mb-2">
-          <label class="form-label">Nama Lengkap</label>
-          <input type="text" id="regNama" class="form-control" required placeholder="Nama Guru / Staf">
-        </div>
-        <div class="mb-2">
-          <label class="form-label">Username</label>
-          <input type="text" id="regUser" class="form-control" required placeholder="Buat username">
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Password</label>
-          <input type="password" id="regPass" class="form-control" required placeholder="Buat password">
-        </div>
-        <button type="submit" class="btn btn-success w-100 fw-bold" id="btnReg">Daftar Sekarang</button>
-        <div class="text-center mt-3">
-          <a href="#" onclick="toggleAuth('login')" class="small text-decoration-none">Sudah punya akun? Kembali ke Login</a>
-        </div>
+      <!-- Form Registrasi Akun Baru -->
+      <form id="register-form" class="space-y-3 hidden">
+        <h2 class="text-lg font-bold text-slate-700">Pengajuan Akses Baru</h2>
+        <input type="text" id="reg-nama" required class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Nama Lengkap Guru / Staf" />
+        <input type="text" id="reg-user" required class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Username yang diinginkan" />
+        <input type="password" id="reg-pass" required class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Password" />
+        <select id="reg-role" class="w-full border rounded-lg px-3 py-2 text-sm">
+          <option value="Guru">Motivator / Guru</option>
+          <option value="Admin">Admin Unit</option>
+        </select>
+        <button type="submit" id="btn-reg" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg transition">
+          Kirim Pengajuan
+        </button>
+        <p class="text-xs text-center text-slate-500 pt-1">
+          Sudah disetujui? <button type="button" onclick="toggleAuthMode(false)" class="text-sky-600 font-semibold hover:underline">Kembali ke Login</button>
+        </p>
       </form>
-      <div id="authAlert" class="alert mt-3 d-none small"></div>
+
+      <div id="auth-msg" class="mt-4 text-center text-sm font-medium text-rose-600 hidden"></div>
     </div>
   </div>
-</div>
 
-<!-- HALAMAN UTAMA APLIKASI -->
-<div id="appSection" class="container-fluid d-none">
-  <div class="row">
-    <!-- Sidebar Menu -->
-    <div class="col-md-3 col-lg-2 sidebar p-3 no-print">
-      <div class="text-center border-bottom border-primary pb-3 mb-3">
-        <h6 class="fw-bold mb-0">BINTANG JUNIOR</h6>
-        <small class="text-warning">Unit Top Putera</small>
-        <div class="mt-2 badge bg-light text-dark text-wrap" id="userInfoBadge"></div>
-      </div>
-
-      <small class="text-uppercase text-info fw-bold" style="font-size: 11px;">Menu Isian Data</small>
-      <ul class="nav flex-column mt-1 mb-3" id="menuList">
-        <li class="nav-item"><a class="nav-link active" onclick="loadMenu('Data_Murid', this)"><i class="fas fa-user-graduate me-2"></i>Data Murid</a></li>
-        <li class="nav-item"><a class="nav-link" onclick="loadMenu('Data_Guru', this)"><i class="fas fa-chalkboard-teacher me-2"></i>Data Guru</a></li>
-        <li class="nav-item"><a class="nav-link" onclick="loadMenu('Absensi_Harian', this)"><i class="fas fa-calendar-check me-2"></i>Absensi Harian</a></li>
-        <li class="nav-item"><a class="nav-link" onclick="loadMenu('Perkembangan_Siswa', this)"><i class="fas fa-chart-line me-2"></i>Perkembangan Siswa</a></li>
-        <li class="nav-item"><a class="nav-link" onclick="loadMenu('Pembayaran_SPP', this)"><i class="fas fa-money-bill-wave me-2"></i>Pembayaran SPP</a></li>
-        <li class="nav-item"><a class="nav-link" onclick="loadMenu('Stok_Modul', this)"><i class="fas fa-boxes me-2"></i>Stok Modul</a></li>
-        <li class="nav-item"><a class="nav-link" onclick="loadMenu('Pengeluaran_Operasional', this)"><i class="fas fa-receipt me-2"></i>Pengeluaran Ops</a></li>
-      </ul>
-
-      <small class="text-uppercase text-warning fw-bold" style="font-size: 11px;">Fitur Khusus</small>
-      <ul class="nav flex-column mt-1">
-        <li class="nav-item"><a class="nav-link" onclick="showIjazahMenu(this)"><i class="fas fa-award me-2"></i>Ijazah Hasil Belajar</a></li>
-        <li class="nav-item d-none" id="navAdminApproval"><a class="nav-link" onclick="showAdminMenu(this)"><i class="fas fa-user-shield me-2"></i>Persetujuan User (6 Bln)</a></li>
-        <li class="nav-item mt-3"><a class="nav-link bg-danger text-white text-center" onclick="logout()"><i class="fas fa-sign-out-alt me-1"></i> Keluar</a></li>
-      </ul>
-    </div>
-
-    <!-- Konten Utama -->
-    <div class="col-md-9 col-lg-10 p-4">
-      <!-- Loading Spinner -->
-      <div id="loadingBar" class="text-center my-5 d-none">
-        <div class="spinner-border text-primary" role="status"></div>
-        <p class="mt-2 text-muted">Menghubungkan ke Google Spreadsheet...</p>
-      </div>
-
-      <!-- Area Menu Isian & Tabel Data -->
-      <div id="crudContainer">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h4 class="fw-bold text-primary mb-0" id="pageTitle">Data Murid</h4>
-          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahData">
-            <i class="fas fa-plus me-1"></i> Tambah Data Baru
-          </button>
-        </div>
-        <div class="card shadow-sm border-0">
-          <div class="card-body table-responsive">
-            <table class="table table-hover table-bordered align-middle small" id="dataTable">
-              <thead class="table-primary" id="tableHead"></thead>
-              <tbody id="tableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- Area Ijazah Hasil Belajar -->
-      <div id="ijazahContainer" class="d-none">
-        <div class="card shadow-sm border-0 mb-4 no-print">
-          <div class="card-body">
-            <h5 class="fw-bold text-primary mb-3"><i class="fas fa-award me-2"></i>Cetak Ijazah / Sertifikat Hasil Belajar</h5>
-            <div class="row g-2 align-items-end">
-              <div class="col-md-6">
-                <label class="form-label">Pilih Murid</label>
-                <select id="selectMuridIjazah" class="form-select"></select>
-              </div>
-              <div class="col-md-3">
-                <button class="btn btn-primary w-100" onclick="generateIjazah()"><i class="fas fa-eye me-1"></i> Tampilkan Ijazah</button>
-              </div>
-              <div class="col-md-3">
-                <button class="btn btn-success w-100" onclick="window.print()"><i class="fas fa-print me-1"></i> Cetak / Simpan PDF</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Template Ijazah Siap Cetak -->
-        <div id="areaCetakIjazah" class="d-none">
-          <div class="ijazah-box shadow">
-            <div class="text-center border-bottom border-2 border-primary pb-3 mb-4">
-              <h2 class="ijazah-title mb-1">SERTIFIKAT & IJAZAH HASIL BELAJAR</h2>
-              <h5 class="fw-bold text-dark mb-0">BIMBA BINTANG JUNIOR - UNIT TOP PUTERA</h5>
-              <small class="text-muted">Jl. Kamarung, Perumahan Top Putra Pagaden Blok AB No. 13</small>
-            </div>
-
-            <p class="text-center mb-4">Diberikan dengan bangga kepada ananda:</p>
-            <h2 class="text-center fw-bold text-primary text-decoration-underline mb-4" id="ijzNama">NAMA MURID</h2>
-
-            <div class="row justify-content-center mb-4">
-              <div class="col-md-8">
-                <table class="table table-borderless table-sm">
-                  <tr><td width="35%">ID Murid</td><td>: <strong id="ijzId"></strong></td></tr>
-                  <tr><td>Tempat, Tanggal Lahir</td><td>: <span id="ijzTglLahir"></span></td></tr>
-                  <tr><td>Nama Orang Tua</td><td>: <span id="ijzOrtu"></span></td></tr>
-                  <tr><td>Level Capaian Saat Ini</td><td>: <strong id="ijzLevel"></strong></td></tr>
-                  <tr><td>Total Jam Belajar</td><td>: <strong id="ijzJam"></strong> Jam</td></tr>
-                </table>
-              </div>
-            </div>
-
-            <h6 class="fw-bold mb-2">Riwayat Evaluasi & Capaian Modul:</h6>
-            <table class="table table-bordered table-sm mb-4">
-              <thead class="table-light">
-                <tr>
-                  <th>Tanggal</th>
-                  <th>Aspek Penilaian</th>
-                  <th>Modul / Tahap</th>
-                  <th>Capaian Skill</th>
-                  <th>Status Kelulusan</th>
-                </tr>
-              </thead>
-              <tbody id="ijzTabelEvaluasi"></tbody>
-            </table>
-
-            <div class="row mt-5 pt-3 text-center">
-              <div class="col-6">
-                <p class="mb-5">Orang Tua / Wali Murid,</p>
-                <p class="fw-bold mb-0">(<span id="ijzTtdOrtu"></span>)</p>
-              </div>
-              <div class="col-6">
-                <p class="mb-5">Pagaden, <span id="ijzTanggalCetak"></span><br>Kepala Unit Top Putera,</p>
-                <p class="fw-bold mb-0">(Siti Nurhaliza, S.Pd)</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Area Persetujuan User Admin (Siklus 6 Bulan) -->
-      <div id="adminContainer" class="d-none">
-        <h4 class="fw-bold text-primary mb-3"><i class="fas fa-user-shield me-2"></i>Persetujuan & Perpanjangan Akses (6 Bulan)</h4>
-        <div class="alert alert-info small">
-          Setiap persetujuan atau perpanjangan akan memberikan akses login selama <strong>6 bulan (180 hari)</strong> terhitung sejak tanggal disetujui.
-        </div>
-        <div class="card shadow-sm border-0">
-          <div class="card-body table-responsive">
-            <table class="table table-bordered align-middle small">
-              <thead class="table-dark">
-                <tr>
-                  <th>Username</th>
-                  <th>Nama Lengkap</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>Tgl Disetujui</th>
-                  <th>Kadaluarsa (6 Bln)</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody id="userTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL FORM TAMBAH DATA DINAMIS -->
-<div class="modal fade" id="modalTambahData" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header card-header-custom">
-        <h5 class="modal-title" id="modalTitle">Tambah Data</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <form id="dynamicForm">
-        <div class="modal-body row g-3" id="dynamicFormFields"></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn btn-primary" id="btnSaveData">Simpan ke Spreadsheet</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  // GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
-  const API_URL = "https://script.google.com/macros/s/AKfycbzeK47vB-XTToYqNlBRw9RnUej3_cVlbagdVxaugXAyZLe7rJOlsVOJe_0FbpK_VVDwPQ/exec";
-
-  let currentUser = null;
-  let currentSheet = "Data_Murid";
-  let currentHeaders = [];
-
-  // Cek sesi login tersimpan
-  window.onload = () => {
-    const saved = sessionStorage.getItem("bimbaUser");
-    if (saved) {
-      currentUser = JSON.parse(saved);
-      initApp();
-    }
-  };
-
-  function toggleAuth(mode) {
-    document.getElementById("authAlert").classList.add("d-none");
-    if (mode === "register") {
-      document.getElementById("loginForm").classList.add("d-none");
-      document.getElementById("registerForm").classList.remove("d-none");
-    } else {
-      document.getElementById("registerForm").classList.add("d-none");
-      document.getElementById("loginForm").classList.remove("d-none");
-    }
-  }
-
-  function showAlert(msg, type) {
-    const el = document.getElementById("authAlert");
-    el.className = `alert alert-${type} mt-3 small`;
-    el.textContent = msg;
-    el.classList.remove("d-none");
-  }
-
-  async function callApi(payload) {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      body: JSON.stringify(payload)
-    });
-    return await res.json();
-  }
-
-  // Handle Login
-  document.getElementById("loginForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const btn = document.getElementById("btnLogin");
-    btn.disabled = true; btn.textContent = "Memeriksa...";
-    try {
-      const res = await callApi({
-        action: "login",
-        username: document.getElementById("loginUser").value,
-        password: document.getElementById("loginPass").value
-      });
-      if (res.success) {
-        currentUser = res.user;
-        sessionStorage.setItem("bimbaUser", JSON.stringify(currentUser));
-        initApp();
-      } else {
-        showAlert(res.message, "danger");
-      }
-    } catch (err) {
-      showAlert("Gagal terhubung ke server. Pastikan API_URL sudah benar.", "danger");
-    }
-    btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt me-1"></i> Masuk';
-  });
-
-  // Handle Registrasi
-  document.getElementById("registerForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const btn = document.getElementById("btnReg");
-    btn.disabled = true; btn.textContent = "Mendaftar...";
-    const res = await callApi({
-      action: "register",
-      nama: document.getElementById("regNama").value,
-      username: document.getElementById("regUser").value,
-      password: document.getElementById("regPass").value
-    });
-    showAlert(res.message, res.success ? "success" : "danger");
-    if (res.success) document.getElementById("registerForm").reset();
-    btn.disabled = false; btn.textContent = "Daftar Sekarang";
-  });
-
-  function initApp() {
-    document.getElementById("authSection").classList.add("d-none");
-    document.getElementById("appSection").classList.remove("d-none");
-    document.getElementById("userInfoBadge").innerHTML = `${currentUser.nama} (${currentUser.role})<br>Aktif s/d: ${currentUser.expired}`;
-    if (currentUser.role === "Admin") {
-      document.getElementById("navAdminApproval").classList.remove("d-none");
-    }
-    loadMenu("Data_Murid", document.querySelector("#menuList .nav-link"));
-  }
-
-  function logout() {
-    sessionStorage.removeItem("bimbaUser");
-    location.reload();
-  }
-
-  function setActiveNav(el) {
-    document.querySelectorAll(".sidebar .nav-link").forEach(n => n.classList.remove("active"));
-    if (el) el.classList.add("active");
-  }
-
-  function hideAllContainers() {
-    document.getElementById("crudContainer").classList.add("d-none");
-    document.getElementById("ijazahContainer").classList.add("d-none");
-    document.getElementById("adminContainer").classList.add("d-none");
-  }
-
-  // Muat Menu Isian & Tabel
-  async function loadMenu(sheetName, navEl) {
-    setActiveNav(navEl);
-    hideAllContainers();
-    currentSheet = sheetName;
-    document.getElementById("pageTitle").textContent = sheetName.replace(/_/g, " ");
-    document.getElementById("modalTitle").textContent = "Tambah " + sheetName.replace(/_/g, " ");
-    document.getElementById("loadingBar").classList.remove("d-none");
-
-    const res = await callApi({ action: "getSheetData", sheetName: sheetName });
-    document.getElementById("loadingBar").classList.add("d-none");
-    document.getElementById("crudContainer").classList.remove("d-none");
-
-    if (res.success) {
-      currentHeaders = res.headers;
-      renderTable(res.headers, res.data);
-      renderDynamicForm(res.headers);
-    }
-  }
-
-  function renderTable(headers, rows) {
-    const thead = document.getElementById("tableHead");
-    const tbody = document.getElementById("tableBody");
-    thead.innerHTML = "<tr>" + headers.map(h => `<th>${h.replace(/_/g, " ")}</th>`).join("") + "</tr>";
+  <!-- ==================== DASHBOARD UTAMA ==================== -->
+  <div id="app-screen" class="hidden min-h-screen flex flex-col md:flex-row">
     
-    if (rows.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="${headers.length}" class="text-center text-muted">Belum ada data</td></tr>`;
-      return;
-    }
-
-    tbody.innerHTML = rows.map(row => {
-      return "<tr>" + headers.map(h => {
-        let val = row[h] || "-";
-        if (String(val).startsWith("http")) {
-          val = `<a href="${val}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat File</a>`;
-        }
-        return `<td>${val}</td>`;
-      }).join("") + "</tr>";
-    }).join("");
-  }
-
-  function renderDynamicForm(headers) {
-    const container = document.getElementById("dynamicFormFields");
-    container.innerHTML = headers.map(h => {
-      const isDate = h.toLowerCase().includes("tanggal");
-      const inputType = isDate ? "date" : "text";
-      return `
-        <div class="col-md-6">
-          <label class="form-label small fw-bold">${h.replace(/_/g, " ")}</label>
-          <input type="${inputType}" name="${h}" class="form-control form-control-sm" required>
+    <!-- Sidebar Daftar Menu Isian -->
+    <aside class="no-print w-full md:w-64 bg-slate-900 text-white flex flex-col justify-between shrink-0">
+      <div>
+        <div class="p-5 border-b border-slate-800">
+          <h2 class="font-extrabold text-lg text-sky-400 leading-tight">BINTANG JUNIOR</h2>
+          <p class="text-xs text-slate-400">Top Putera • Pagaden</p>
+          <div class="mt-3 bg-slate-800 rounded-lg p-2.5 text-xs">
+            <p class="font-semibold text-white" id="user-display-name">Admin</p>
+            <p class="text-emerald-400 mt-0.5">Aktif s/d: <span id="user-display-exp">-</span></p>
+          </div>
         </div>
-      `;
-    }).join("");
-  }
 
-  // Simpan Data Baru ke Spreadsheet
-  document.getElementById("dynamicForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const btn = document.getElementById("btnSaveData");
-    btn.disabled = true; btn.textContent = "Menyimpan...";
-
-    const formData = new FormData(e.target);
-    let rowData = {};
-    formData.forEach((value, key) => rowData[key] = value);
-
-    const res = await callApi({ action: "addRow", sheetName: currentSheet, rowData: rowData });
-    btn.disabled = false; btn.textContent = "Simpan ke Spreadsheet";
-
-    if (res.success) {
-      bootstrap.Modal.getInstance(document.getElementById("modalTambahData")).hide();
-      e.target.reset();
-      loadMenu(currentSheet, null);
-    } else {
-      alert(res.message);
-    }
-  });
-
-  // --- MENU IJAZAH HASIL BELAJAR ---
-  async function showIjazahMenu(navEl) {
-    setActiveNav(navEl);
-    hideAllContainers();
-    document.getElementById("loadingBar").classList.remove("d-none");
-
-    const res = await callApi({ action: "getSheetData", sheetName: "Data_Murid" });
-    document.getElementById("loadingBar").classList.add("d-none");
-    document.getElementById("ijazahContainer").classList.remove("d-none");
-
-    const select = document.getElementById("selectMuridIjazah");
-    select.innerHTML = res.data.map(m => `<option value="${m.ID_Murid}">${m.ID_Murid} - ${m.Nama_Lengkap}</option>`).join("");
-  }
-
-  async function generateIjazah() {
-    const idMurid = document.getElementById("selectMuridIjazah").value;
-    if (!idMurid) return;
-
-    document.getElementById("loadingBar").classList.remove("d-none");
-    const res = await callApi({ action: "getIjazahData", idMurid: idMurid });
-    document.getElementById("loadingBar").classList.add("d-none");
-
-    if (res.success) {
-      const m = res.murid;
-      document.getElementById("ijzNama").textContent = m.Nama_Lengkap;
-      document.getElementById("ijzId").textContent = m.ID_Murid;
-      document.getElementById("ijzTglLahir").textContent = m.Tanggal_Lahir;
-      document.getElementById("ijzOrtu").textContent = m.Nama_Orang_Tua;
-      document.getElementById("ijzTtdOrtu").textContent = m.Nama_Orang_Tua;
-      document.getElementById("ijzLevel").textContent = m.Level_Saat_Ini;
-      document.getElementById("ijzJam").textContent = m["Total Jam Belajar"] || "0";
-      document.getElementById("ijzTanggalCetak").textContent = new Date().toLocaleDateString("id-ID", { day: 'numeric', month: 'long', year: 'numeric' });
-
-      const tbody = document.getElementById("ijzTabelEvaluasi");
-      if (res.evaluasi.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center">Belum ada catatan evaluasi modul.</td></tr>';
-      } else {
-        tbody.innerHTML = res.evaluasi.map(ev => `
-          <tr>
-            <td>${ev.Tanggal}</td>
-            <td>${ev.Aspek_Penilaian}</td>
-            <td>${ev.Modul_atau_Tahap}</td>
-            <td>${ev.Capaian_Skill}</td>
-            <td><strong>${ev.Status_Kelulusan_Modul}</strong></td>
-          </tr>
-        `).join("");
-      }
-      document.getElementById("areaCetakIjazah").classList.remove("d-none");
-    }
-  }
-
-  // --- MENU PERSETUJUAN ADMIN (6 BULAN) ---
-  async function showAdminMenu(navEl) {
-    setActiveNav(navEl);
-    hideAllContainers();
-    document.getElementById("loadingBar").classList.remove("d-none");
-
-    const res = await callApi({ action: "getUsers" });
-    document.getElementById("loadingBar").classList.add("d-none");
-    document.getElementById("adminContainer").classList.remove("d-none");
-
-    const tbody = document.getElementById("userTableBody");
-    tbody.innerHTML = res.data.map(u => `
-      <tr>
-        <td>${u.Username}</td>
-        <td>${u.Nama_Lengkap}</td>
-        <td>${u.Role}</td>
-        <td><span class="badge ${u.Status_Persetujuan === 'Disetujui' ? 'bg-success' : 'bg-warning text-dark'}">${u.Status_Persetujuan}</span></td>
-        <td>${u.Tanggal_Disetujui}</td>
-        <td><strong>${u.Tanggal_Kadaluarsa}</strong></td>
-        <td>
-          <button class="btn btn-sm btn-primary" onclick="approveUser(${u.rowIndex})">
-            <i class="fas fa-check-circle me-1"></i> Setujui / Perpanjang 6 Bln
+        <nav class="p-3 space-y-1 text-sm">
+          <button onclick="showTab('tab-murid')" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg bg-sky-600 font-semibold flex items-center gap-2">
+            🪪 ID & Data Murid (Foto)
           </button>
-        </td>
-      </tr>
-    `).join("");
-  }
+          <button onclick="showTab('tab-absensi')" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-800 flex items-center gap-2">
+            📋 Absensi Harian
+          </button>
+          <button onclick="showTab('tab-perkembangan')" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-800 flex items-center gap-2">
+            📈 Perkembangan Siswa
+          </button>
+          <button onclick="showTab('tab-pembayaran')" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-800 flex items-center gap-2">
+            🧾 SPP & Tanda Terima PDF
+          </button>
+          <button onclick="showTab('tab-keuangan')" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-800 flex items-center gap-2">
+            💰 Operasional & Sisa Saldo
+          </button>
+          <button onclick="showTab('tab-lulus')" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-800 flex items-center gap-2">
+            🎓 Riwayat Siswa Lulus
+          </button>
+          <button onclick="showTab('tab-admin')" id="menu-admin-only" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-800 flex items-center gap-2 text-amber-300">
+            🔐 Persetujuan User (6 Bln)
+          </button>
+        </nav>
+      </div>
 
-  async function approveUser(rowIndex) {
-    if (!confirm("Setujui atau perpanjang masa aktif akun ini selama 6 bulan ke depan?")) return;
-    const res = await callApi({ action: "approveUser", rowIndex: rowIndex });
-    alert(res.message);
-    showAdminMenu(null);
-  }
-</script>
+      <div class="p-4 border-t border-slate-800">
+        <button onclick="logout()" class="w-full bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold py-2 rounded-lg">
+          Keluar (Logout)
+        </button>
+      </div>
+    </aside>
+
+    <!-- Area Konten -->
+    <main class="flex-1 p-5 md:p-8 overflow-y-auto">
+      
+      <!-- 1. TAB DATA MURID + FOTO -->
+      <section id="tab-murid" class="tab-section space-y-6">
+        <div class="flex flex-wrap justify-between items-center gap-2">
+          <h1 class="text-2xl font-bold">Pendaftaran & Kartu ID Murid</h1>
+          <button onclick="loadAllData()" class="bg-slate-200 hover:bg-slate-300 text-xs font-bold px-3 py-2 rounded-lg">🔄 Segarkan Data</button>
+        </div>
+
+        <form id="form-murid" class="bg-white p-6 rounded-xl shadow-sm grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input type="text" name="id_murid" required placeholder="ID Murid (cth: BBJ-003)" class="border rounded-lg px-3 py-2 text-sm" />
+          <input type="text" name="nama_lengkap" required placeholder="Nama Lengkap Siswa" class="border rounded-lg px-3 py-2 text-sm" />
+          <input type="text" name="nama_panggilan" required placeholder="Nama Panggilan" class="border rounded-lg px-3 py-2 text-sm" />
+          <input type="date" name="tanggal_lahir" required class="border rounded-lg px-3 py-2 text-sm" title="Tanggal Lahir" />
+          <input type="text" name="nama_ortu" required placeholder="Nama Orang Tua" class="border rounded-lg px-3 py-2 text-sm" />
+          <input type="text" name="no_wa" required placeholder="No WA Ortu (628...)" class="border rounded-lg px-3 py-2 text-sm" />
+          <input type="text" name="alamat" required placeholder="Alamat Lengkap" class="border rounded-lg px-3 py-2 text-sm md:col-span-2" />
+          <input type="date" name="tanggal_masuk" required class="border rounded-lg px-3 py-2 text-sm" title="Tanggal Masuk" />
+          <select name="paket_jadwal" class="border rounded-lg px-3 py-2 text-sm">
+            <option value="Senin-Rabu-Jumat">Senin-Rabu-Jumat</option>
+            <option value="Selasa-Kamis-Sabtu">Selasa-Kamis-Sabtu</option>
+            <option value="Setiap Hari (5x)">Setiap Hari (5x)</option>
+          </select>
+          <input type="text" name="jam_belajar" placeholder="Jam Belajar (09.00 - 10.00)" class="border rounded-lg px-3 py-2 text-sm" />
+          <select name="level" class="border rounded-lg px-3 py-2 text-sm">
+            <option value="Persiapan">Persiapan</option>
+            <option value="Level 1">Level 1</option>
+            <option value="Level 2">Level 2</option>
+            <option value="Level 3">Level 3</option>
+          </select>
+          <div class="md:col-span-2">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Upload Foto Peserta (Untuk ID Murid)</label>
+            <input type="file" id="murid-photo-file" accept="image/*" class="w-full border rounded-lg px-3 py-1.5 text-sm bg-slate-50" />
+          </div>
+          <div class="flex items-end">
+            <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 rounded-lg text-sm">
+              + Simpan Data Murid
+            </button>
+          </div>
+        </form>
+
+        <!-- Kartu ID Murid Grid -->
+        <div id="grid-kartu-murid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </section>
+
+      <!-- 2. TAB ABSENSI HARIAN -->
+      <section id="tab-absensi" class="tab-section hidden space-y-6">
+        <h1 class="text-2xl font-bold">Input Absensi Harian</h1>
+        <form id="form-absensi" class="bg-white p-6 rounded-xl shadow-sm grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input type="text" name="id_absensi" required placeholder="ID Absensi (ABS-003)" class="border rounded-lg px-3 py-2 text-sm" />
+          <input type="date" name="tanggal" required class="border rounded-lg px-3 py-2 text-sm" />
+          <select name="id_murid" id="abs-select-murid" required class="border rounded-lg px-3 py-2 text-sm"></select>
+          <select name="id_guru" id="abs-select-guru" required class="border rounded-lg px-3 py-2 text-sm"></select>
+          <select name="kehadiran" class="border rounded-lg px-3 py-2 text-sm">
+            <option value="Hadir">Hadir</option>
+            <option value="Izin">Izin</option>
+            <option value="Sakit">Sakit</option>
+            <option value="Alpa">Alpa</option>
+          </select>
+          <input type="number" name="jam_belajar" value="1" min="1" placeholder="Durasi (Jam)" class="border rounded-lg px-3 py-2 text-sm" />
+          <input type="text" name="materi" required placeholder="Materi Hari Ini (cth: Modul Baca 1A)" class="border rounded-lg px-3 py-2 text-sm md:col-span-2" />
+          <input type="text" name="catatan" placeholder="Catatan Singkat" class="border rounded-lg px-3 py-2 text-sm" />
+          <button type="submit" class="md:col-span-3 bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 rounded-lg text-sm">
+            Simpan Absensi
+          </button>
+        </form>
+        <div class="bg-white rounded-xl shadow-sm overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead class="bg-slate-200 text-slate-700">
+              <tr><th class="p-3">Tanggal</th><th class="p-3">Murid</th><th class="p-3">Guru</th><th class="p-3">Status</th><th class="p-3">Materi</th></tr>
+            </thead>
+            <tbody id="tbody-absensi" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3. TAB PERKEMBANGAN SISWA -->
+      <section id="tab-perkembangan" class="tab-section hidden space-y-6">
+        <h1 class="text-2xl font-bold">Evaluasi Perkembangan Siswa</h1>
+        <form id="form-perkembangan" class="bg-white p-6 rounded-xl shadow-sm grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input type="text" name="id_evaluasi" required placeholder="ID Evaluasi (EVL-003)" class="border rounded-lg px-3 py-2 text-sm" />
+          <input type="date" name="tanggal" required class="border rounded-lg px-3 py-2 text-sm" />
+          <select name="id_murid" id="evl-select-murid" required class="border rounded-lg px-3 py-2 text-sm"></select>
+          <input type="text" name="level" placeholder="Level Saat Ini" class="border rounded-lg px-3 py-2 text-sm" />
+          <select name="aspek" class="border rounded-lg px-3 py-2 text-sm">
+            <option value="Membaca (Baca)">Membaca (Baca)</option>
+            <option value="Menulis (Tulis)">Menulis (Tulis)</option>
+            <option value="Berhitung (Hitung)">Berhitung (Hitung)</option>
+          </select>
+          <input type="text" name="modul" placeholder="Modul / Tahap" class="border rounded-lg px-3 py-2 text-sm" />
+          <select name="capaian" class="border rounded-lg px-3 py-2 text-sm">
+            <option value="Lancar / Mandiri">Lancar / Mandiri</option>
+            <option value="Masih Dibimbing">Masih Dibimbing</option>
+          </select>
+          <select name="status_lulus" class="border rounded-lg px-3 py-2 text-sm">
+            <option value="Proses / Latihan">Proses / Latihan</option>
+            <option value="Lulus ke Modul Berikutnya">Lulus ke Modul Berikutnya</option>
+          </select>
+          <select name="id_guru" id="evl-select-guru" required class="border rounded-lg px-3 py-2 text-sm"></select>
+          <textarea name="catatan_ortu" rows="2" placeholder="Catatan untuk Orang Tua" class="border rounded-lg px-3 py-2 text-sm md:col-span-3"></textarea>
+          <button type="submit" class="md:col-span-3 bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 rounded-lg text-sm">
+            Simpan Evaluasi
+          </button>
+        </form>
+      </section>
+
+      <!-- 4. TAB PEMBAYARAN SPP & CETAK TANDA TERIMA PDF -->
+      <section id="tab-pembayaran" class="tab-section hidden space-y-6">
+        <h1 class="text-2xl font-bold">Pembayaran SPP / Biaya Pendaftaran & Kwitansi PDF</h1>
+        
+        <form id="form-pembayaran" class="bg-white p-6 rounded-xl shadow-sm grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input type="text" name="no_kwitansi" required placeholder="No Kwitansi (INV-202611-003)" class="border rounded-lg px-3 py-2 text-sm" />
+          <input type="date" name="tanggal_bayar" required class="border rounded-lg px-3 py-2 text-sm" />
+          <select name="id_murid" id="pay-select-murid" required class="border rounded-lg px-3 py-2 text-sm"></select>
+          <select name="jenis_pembayaran" class="border rounded-lg px-3 py-2 text-sm">
+            <option value="SPP Bulanan">SPP Bulanan</option>
+            <option value="Biaya Pendaftaran">Biaya Pendaftaran</option>
+            <option value="Modul & Seragam">Modul & Seragam</option>
+          </select>
+          <input type="text" name="untuk_bulan" required placeholder="Untuk Bulan / Keterangan (Desember 2026)" class="border rounded-lg px-3 py-2 text-sm" />
+          <input type="number" name="nominal" required placeholder="Nominal Rp (cth: 250000)" class="border rounded-lg px-3 py-2 text-sm" />
+          <select name="metode_bayar" class="border rounded-lg px-3 py-2 text-sm">
+            <option value="Tunai">Tunai</option>
+            <option value="Transfer Bank">Transfer Bank</option>
+          </select>
+          <input type="text" name="bukti_transfer" placeholder="Link Bukti Transfer (Opsional)" class="border rounded-lg px-3 py-2 text-sm md:col-span-2" />
+          <button type="submit" class="md:col-span-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm">
+            Simpan Pembayaran & Tambah ke Saldo
+          </button>
+        </form>
+
+        <div class="bg-white rounded-xl shadow-sm overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead class="bg-slate-200 text-slate-700">
+              <tr>
+                <th class="p-3">No Kwitansi</th>
+                <th class="p-3">Tanggal</th>
+                <th class="p-3">Nama Murid</th>
+                <th class="p-3">Jenis</th>
+                <th class="p-3">Nominal</th>
+                <th class="p-3 text-center">Aksi Kwitansi</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-pembayaran" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5. TAB PENGELUARAN OPERASIONAL & SISA SALDO -->
+      <section id="tab-keuangan" class="tab-section hidden space-y-6">
+        <h1 class="text-2xl font-bold">Pengeluaran Operasional & Sisa Saldo Keuangan</h1>
+
+        <!-- Ringkasan Saldo -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-emerald-600 text-white p-5 rounded-xl shadow-sm">
+            <p class="text-xs uppercase font-semibold opacity-80">Total Pemasukan (SPP & Daftar)</p>
+            <p class="text-2xl font-extrabold mt-1" id="stat-pemasukan">Rp 0</p>
+          </div>
+          <div class="bg-rose-600 text-white p-5 rounded-xl shadow-sm">
+            <p class="text-xs uppercase font-semibold opacity-80">Total Pengeluaran Operasional</p>
+            <p class="text-2xl font-extrabold mt-1" id="stat-pengeluaran">Rp 0</p>
+          </div>
+          <div class="bg-sky-700 text-white p-5 rounded-xl shadow-sm">
+            <p class="text-xs uppercase font-semibold opacity-80">Sisa Saldo Keuangan Unit</p>
+            <p class="text-2xl font-extrabold mt-1" id="stat-saldo">Rp 0</p>
+          </div>
+        </div>
+
+        <form id="form-pengeluaran" class="bg-white p-6 rounded-xl shadow-sm grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input type="text" name="id_pengeluaran" required placeholder="ID Pengeluaran (OUT-003)" class="border rounded-lg px-3 py-2 text-sm" />
+          <input type="date" name="tanggal" required class="border rounded-lg px-3 py-2 text-sm" />
+          <select name="kategori" class="border rounded-lg px-3 py-2 text-sm">
+            <option value="ATK & Operasional">ATK & Operasional</option>
+            <option value="Gaji Guru">Gaji Guru</option>
+            <option value="Listrik & Internet">Listrik & Internet</option>
+            <option value="Sewa & Pemeliharaan">Sewa & Pemeliharaan</option>
+          </select>
+          <input type="text" name="keterangan" required placeholder="Keterangan Pengeluaran" class="border rounded-lg px-3 py-2 text-sm md:col-span-2" />
+          <input type="number" name="nominal" required placeholder="Nominal Keluar (Rp)" class="border rounded-lg px-3 py-2 text-sm" />
+          <button type="submit" class="md:col-span-3 bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-lg text-sm">
+            Catat Pengeluaran & Hitung Sisa Saldo
+          </button>
+        </form>
+
+        <div class="bg-white rounded-xl shadow-sm overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead class="bg-slate-200 text-slate-700">
+              <tr>
+                <th class="p-3">ID</th>
+                <th class="p-3">Tanggal</th>
+                <th class="p-3">Kategori</th>
+                <th class="p-3">Keterangan</th>
+                <th class="p-3">Nominal Keluar</th>
+                <th class="p-3">Sisa Saldo</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-pengeluaran" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 6. TAB RIWAYAT SISWA YANG SUDAH LULUS -->
+      <section id="tab-lulus" class="tab-section hidden space-y-6">
+        <h1 class="text-2xl font-bold">Daftar Riwayat Siswa yang Sudah Lulus</h1>
+        
+        <form id="form-lulus" class="bg-white p-6 rounded-xl shadow-sm grid grid-cols-1 md:grid-cols-3 gap-4">
+          <select name="id_murid" id="grad-select-murid" required class="border rounded-lg px-3 py-2 text-sm"></select>
+          <input type="date" name="tanggal_lulus" required class="border rounded-lg px-3 py-2 text-sm" title="Tanggal Lulus" />
+          <input type="text" name="level_akhir" value="Level 3 / Tamat Baca" required class="border rounded-lg px-3 py-2 text-sm" />
+          <select name="predikat" class="border rounded-lg px-3 py-2 text-sm">
+            <option value="Sangat Baik (Lancar Mandiri)">Sangat Baik (Lancar Mandiri)</option>
+            <option value="Baik">Baik</option>
+          </select>
+          <input type="text" name="no_sertifikat" required placeholder="No Sertifikat Lulus" class="border rounded-lg px-3 py-2 text-sm" />
+          <input type="text" name="catatan_kelulusan" placeholder="Catatan Kelulusan" class="border rounded-lg px-3 py-2 text-sm" />
+          <button type="submit" class="md:col-span-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg text-sm">
+            🎓 Proses Kelulusan Siswa
+          </button>
+        </form>
+
+        <div class="bg-white rounded-xl shadow-sm overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead class="bg-indigo-100 text-indigo-900">
+              <tr>
+                <th class="p-3">ID Murid</th>
+                <th class="p-3">Nama Lengkap</th>
+                <th class="p-3">Tgl Masuk</th>
+                <th class="p-3">Tgl Lulus</th>
+                <th class="p-3">Predikat</th>
+                <th class="p-3">No Sertifikat</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-alumni" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 7. TAB PERSETUJUAN ADMIN (PERBAHARUI 6 BULAN SEKALI) -->
+      <section id="tab-admin" class="tab-section hidden space-y-6">
+        <h1 class="text-2xl font-bold">Persetujuan & Perpanjangan Akses User (Per 6 Bulan)</h1>
+        <div class="bg-white rounded-xl shadow-sm overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead class="bg-slate-200 text-slate-700">
+              <tr>
+                <th class="p-3">Username</th>
+                <th class="p-3">Nama Lengkap</th>
+                <th class="p-3">Role</th>
+                <th class="p-3">Status</th>
+                <th class="p-3">Tgl Disetujui</th>
+                <th class="p-3">Kadaluarsa (6 Bln)</th>
+                <th class="p-3">Aksi Admin</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-users" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==================== MODAL KWITANSI / TANDA TERIMA PDF ==================== -->
+  <div id="receipt-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6 space-y-4">
+      <div id="receipt-box" class="border-2 border-slate-800 p-6 rounded-lg bg-white text-slate-900">
+        <div class="border-b-2 border-slate-800 pb-3 flex justify-between items-center">
+          <div>
+            <h2 class="font-extrabold text-lg text-sky-800">BIMBA BINTANG JUNIOR</h2>
+            <p class="text-xs text-slate-600">Unit Top Putera • Perumahan Top Putra, Pagaden</p>
+          </div>
+          <div class="text-right">
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded border border-emerald-400">LUNAS</span>
+            <p class="text-xs font-mono mt-1" id="rcp-no">INV-000</p>
+          </div>
+        </div>
+
+        <h3 class="text-center font-bold uppercase tracking-wider text-sm my-3 underline">TANDA TERIMA PEMBAYARAN</h3>
+
+        <table class="w-full text-sm space-y-2">
+          <tr><td class="py-1 text-slate-500 w-36">Tanggal Bayar</td><td class="font-semibold" id="rcp-tgl">-</td></tr>
+          <tr><td class="py-1 text-slate-500">ID / Nama Murid</td><td class="font-semibold" id="rcp-nama">-</td></tr>
+          <tr><td class="py-1 text-slate-500">Jenis Pembayaran</td><td class="font-semibold" id="rcp-jenis">-</td></tr>
+          <tr><td class="py-1 text-slate-500">Keterangan / Bulan</td><td class="font-semibold" id="rcp-bulan">-</td></tr>
+          <tr><td class="py-1 text-slate-500">Metode Bayar</td><td class="font-semibold" id="rcp-metode">-</td></tr>
+        </table>
+
+        <div class="mt-4 bg-slate-100 p-3 rounded-lg flex justify-between items-center border">
+          <span class="font-bold text-sm">TOTAL DITERIMA</span>
+          <span class="font-extrabold text-xl text-sky-800" id="rcp-nominal">Rp 0</span>
+        </div>
+
+        <div class="mt-6 flex justify-between text-xs text-slate-600 pt-2">
+          <div>
+            <p>Catatan:</p>
+            <p class="italic">Simpan tanda terima ini sebagai bukti sah.</p>
+          </div>
+          <div class="text-center">
+            <p>Pagaden, <span id="rcp-tgl-ttd">-</span></p>
+            <p class="mt-10 font-bold underline">Admin Unit Top Putera</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-print flex justify-end gap-2">
+        <button onclick="closeReceipt()" class="px-4 py-2 bg-slate-200 rounded-lg text-sm font-semibold">Tutup</button>
+        <button onclick="window.print()" class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-bold">🖨️ Print</button>
+        <button onclick="downloadReceiptPDF()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-bold">⬇️ Download PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT LOGIKA APLIKASI ==================== -->
+  <script>
+    let GLOBAL_DATA = {};
+    let CURRENT_USER = null;
+
+    function toggleAuthMode(isReg) {
+      document.getElementById('login-form').classList.toggle('hidden', isReg);
+      document.getElementById('register-form').classList.toggle('hidden', !isReg);
+      document.getElementById('auth-msg').classList.add('hidden');
+    }
+
+    async function callGAS(payload) {
+      const res = await fetch(GAS_API_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      return await res.json();
+    }
+
+    // LOGIN
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btn-login');
+      const msg = document.getElementById('auth-msg');
+      btn.textContent = 'Memeriksa Persetujuan...';
+      btn.disabled = true;
+
+      try {
+        const res = await callGAS({
+          action: 'login',
+          username: document.getElementById('login-user').value,
+          password: document.getElementById('login-pass').value
+        });
+
+        if (res.status === 'success') {
+          CURRENT_USER = res.user;
+          document.getElementById('auth-screen').classList.add('hidden');
+          document.getElementById('app-screen').classList.remove('hidden');
+          document.getElementById('user-display-name').textContent = `${res.user.nama} (${res.user.role})`;
+          document.getElementById('user-display-exp').textContent = res.user.expired;
+          if (res.user.role !== 'Admin') {
+            document.getElementById('menu-admin-only').classList.add('hidden');
+          }
+          loadAllData();
+        } else {
+          msg.textContent = res.message;
+          msg.classList.remove('hidden');
+        }
+      } catch (err) {
+        msg.textContent = 'Gagal terhubung ke server Apps Script.';
+        msg.classList.remove('hidden');
+      } finally {
+        btn.textContent = 'Masuk Aplikasi';
+        btn.disabled = false;
+      }
+    });
+
+    // REGISTER
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('auth-msg');
+      const res = await callGAS({
+        action: 'register',
+        data: {
+          nama_lengkap: document.getElementById('reg-nama').value,
+          username: document.getElementById('reg-user').value,
+          password: document.getElementById('reg-pass').value,
+          role: document.getElementById('reg-role').value
+        }
+      });
+      msg.textContent = res.message;
+      msg.className = 'mt-4 text-center text-sm font-medium ' + (res.status === 'success' ? 'text-emerald-600' : 'text-rose-600');
+      msg.classList.remove('hidden');
+    });
+
+    function logout() {
+      location.reload();
+    }
+
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-section').forEach(el => el.classList.add('hidden'));
+      document.getElementById(tabId).classList.remove('hidden');
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('bg-sky-600', 'font-semibold'));
+      event.currentTarget.classList.add('bg-sky-600', 'font-semibold');
+    }
+
+    async function loadAllData() {
+      const res = await callGAS({ action: 'getAllData' });
+      if (res.status !== 'success') return;
+      GLOBAL_DATA = res;
+      renderAll();
+    }
+
+    function formatRp(num) {
+      const clean = Number(String(num).replace(/[^0-9-]/g, '')) || 0;
+      return 'Rp ' + clean.toLocaleString('id-ID');
+    }
+
+    function renderAll() {
+      // 1. Kartu ID Murid dengan Foto
+      const gridMurid = document.getElementById('grid-kartu-murid');
+      gridMurid.innerHTML = '';
+      const muridOptions = '<option value="">-- Pilih Murid --</option>' + 
+        (GLOBAL_DATA.murid || []).filter(m => m.Status === 'Aktif').map(m => `<option value="${m.ID_Murid}">${m.ID_Murid} - ${m.Nama_Lengkap}</option>`).join('');
+
+      ['abs-select-murid', 'evl-select-murid', 'pay-select-murid', 'grad-select-murid'].forEach(id => {
+        document.getElementById(id).innerHTML = muridOptions;
+      });
+
+      const guruOptions = '<option value="">-- Pilih Guru --</option>' + 
+        (GLOBAL_DATA.guru || []).map(g => `<option value="${g.ID_Guru}">${g.Nama_Guru}</option>`).join('');
+      document.getElementById('abs-select-guru').innerHTML = guruOptions;
+      document.getElementById('evl-select-guru').innerHTML = guruOptions;
+
+      (GLOBAL_DATA.murid || []).forEach(m => {
+        const foto = m.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(m.Nama_Lengkap) + '&background=0284c7&color=fff';
+        const badgeColor = m.Status === 'Lulus' ? 'bg-indigo-100 text-indigo-700' : 'bg-emerald-100 text-emerald-700';
+        gridMurid.innerHTML += `
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex items-center p-4 gap-4">
+            <img src="${foto}" alt="${m.Nama_Lengkap}" class="w-20 h-24 object-cover rounded-lg border bg-slate-100 shrink-0" />
+            <div class="text-xs space-y-1 flex-1">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-sky-700">${m.ID_Murid}</span>
+                <span class="px-2 py-0.5 rounded font-semibold ${badgeColor}">${m.Status}</span>
+              </div>
+              <p class="font-bold text-sm text-slate-800">${m.Nama_Lengkap}</p>
+              <p class="text-slate-500">Level: <b>${m.Level_Saat_Ini}</b></p>
+              <p class="text-slate-500">Jadwal: ${m.Paket_Jadwal}</p>
+              <p class="text-slate-500">Ortu: ${m.Nama_Orang_Tua}</p>
+            </div>
+          </div>
+        `;
+      });
+
+      // 2. Tabel Absensi
+      document.getElementById('tbody-absensi').innerHTML = (GLOBAL_DATA.absensi || []).slice().reverse().map(a => `
+        <tr>
+          <td class="p-3">${String(a.Tanggal).slice(0,10)}</td>
+          <td class="p-3 font-medium">${a.Nama_Murid}</td>
+          <td class="p-3">${a.Nama_Guru}</td>
+          <td class="p-3"><span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded text-xs font-bold">${a.Kehadiran}</span></td>
+          <td class="p-3">${a.Materi_Hari_Ini}</td>
+        </tr>
+      `).join('');
+
+      // 3. Tabel Pembayaran + Tombol Cetak Kwitansi
+      let totalMasuk = 0;
+      document.getElementById('tbody-pembayaran').innerHTML = (GLOBAL_DATA.pembayaran || []).slice().reverse().map((p, idx) => {
+        const nom = Number(String(p.Nominal).replace(/[^0-9]/g, '')) || 0;
+        totalMasuk += nom;
+        return `
+          <tr>
+            <td class="p-3 font-mono text-xs font-bold">${p.No_Kwitansi}</td>
+            <td class="p-3">${String(p.Tanggal_Bayar).slice(0,10)}</td>
+            <td class="p-3 font-semibold">${p.Nama_Murid}</td>
+            <td class="p-3">${p.Jenis_Pembayaran} (${p.Untuk_Bulan})</td>
+            <td class="p-3 font-bold text-emerald-700">${formatRp(nom)}</td>
+            <td class="p-3 text-center">
+              <button onclick='openReceipt(${JSON.stringify(p)})' class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg">
+                🧾 Kwitansi PDF
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // 4. Tabel Pengeluaran & Sisa Saldo
+      let totalKeluar = 0;
+      document.getElementById('tbody-pengeluaran').innerHTML = (GLOBAL_DATA.pengeluaran || []).map(out => {
+        const nom = Number(String(out.Nominal).replace(/[^0-9]/g, '')) || 0;
+        totalKeluar += nom;
+        const sisa = totalMasuk - totalKeluar;
+        return `
+          <tr>
+            <td class="p-3 font-mono text-xs">${out.ID_Pengeluaran}</td>
+            <td class="p-3">${String(out.Tanggal).slice(0,10)}</td>
+            <td class="p-3">${out.Kategori}</td>
+            <td class="p-3">${out.Keterangan}</td>
+            <td class="p-3 text-rose-600 font-semibold">${formatRp(nom)}</td>
+            <td class="p-3 font-bold text-sky-800">${formatRp(sisa)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('stat-pemasukan').textContent = formatRp(totalMasuk);
+      document.getElementById('stat-pengeluaran').textContent = formatRp(totalKeluar);
+      document.getElementById('stat-saldo').textContent = formatRp(totalMasuk - totalKeluar);
+
+      // 5. Tabel Siswa Lulus
+      document.getElementById('tbody-alumni').innerHTML = (GLOBAL_DATA.alumni || []).map(al => `
+        <tr>
+          <td class="p-3 font-bold">${al.ID_Murid}</td>
+          <td class="p-3 font-semibold">${al.Nama_Lengkap}</td>
+          <td class="p-3">${String(al.Tanggal_Masuk).slice(0,10)}</td>
+          <td class="p-3">${String(al.Tanggal_Lulus).slice(0,10)}</td>
+          <td class="p-3"><span class="bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded text-xs font-bold">${al.Predikat}</span></td>
+          <td class="p-3 font-mono text-xs">${al.No_Sertifikat}</td>
+        </tr>
+      `).join('');
+
+      // 6. Tabel Persetujuan User Admin
+      document.getElementById('tbody-users').innerHTML = (GLOBAL_DATA.users || []).map(u => `
+        <tr>
+          <td class="p-3 font-bold">${u.Username}</td>
+          <td class="p-3">${u.Nama_Lengkap}</td>
+          <td class="p-3">${u.Role}</td>
+          <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-bold ${u.Status_Persetujuan === 'Disetujui' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${u.Status_Persetujuan}</span></td>
+          <td class="p-3">${String(u.Tanggal_Disetujui || '-').slice(0,10)}</td>
+          <td class="p-3 font-semibold">${String(u.Tanggal_Kadaluarsa || '-').slice(0,10)}</td>
+          <td class="p-3">
+            <button onclick="approveUser('${u.Username}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg">
+              Setujui / Perpanjang 6 Bln
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // --- HANDLER SUBMIT FORM ---
+    document.getElementById('form-murid').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const data = Object.fromEntries(fd.entries());
+      const fileInput = document.getElementById('murid-photo-file');
+
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        data.photoName = file.name;
+        data.photoBase64 = await toBase64(file);
+      }
+
+      const res = await callGAS({ action: 'addMurid', data });
+      alert(res.message);
+      e.target.reset();
+      loadAllData();
+    });
+
+    document.getElementById('form-absensi').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target).entries());
+      const m = GLOBAL_DATA.murid.find(x => x.ID_Murid === data.id_murid);
+      const g = GLOBAL_DATA.guru.find(x => x.ID_Guru === data.id_guru);
+      data.nama_murid = m ? m.Nama_Lengkap : '';
+      data.nama_guru = g ? g.Nama_Guru : '';
+      const res = await callGAS({ action: 'addAbsensi', data });
+      alert(res.message);
+      e.target.reset();
+      loadAllData();
+    });
+
+    document.getElementById('form-perkembangan').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target).entries());
+      const m = GLOBAL_DATA.murid.find(x => x.ID_Murid === data.id_murid);
+      data.nama_murid = m ? m.Nama_Lengkap : '';
+      const res = await callGAS({ action: 'addPerkembangan', data });
+      alert(res.message);
+      e.target.reset();
+      loadAllData();
+    });
+
+    document.getElementById('form-pembayaran').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target).entries());
+      const m = GLOBAL_DATA.murid.find(x => x.ID_Murid === data.id_murid);
+      data.nama_murid = m ? m.Nama_Lengkap : '';
+      const res = await callGAS({ action: 'addPembayaran', data });
+      alert(res.message);
+      e.target.reset();
+      loadAllData();
+    });
+
+    document.getElementById('form-pengeluaran').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target).entries());
+      const res = await callGAS({ action: 'addPengeluaran', data });
+      alert(res.message);
+      e.target.reset();
+      loadAllData();
+    });
+
+    document.getElementById('form-lulus').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target).entries());
+      const m = GLOBAL_DATA.murid.find(x => x.ID_Murid === data.id_murid);
+      if (m) {
+        data.nama_lengkap = m.Nama_Lengkap;
+        data.tanggal_masuk = String(m.Tanggal_Masuk).slice(0,10);
+        data.photo = m.photo || '';
+      }
+      const res = await callGAS({ action: 'graduateStudent', data });
+      alert(res.message);
+      e.target.reset();
+      loadAllData();
+    });
+
+    async function approveUser(targetUsername) {
+      const res = await callGAS({ action: 'approveUser', targetUsername });
+      alert(res.message);
+      loadAllData();
+    }
+
+    // --- KWITANSI & DOWNLOAD PDF ---
+    function openReceipt(p) {
+      document.getElementById('rcp-no').textContent = p.No_Kwitansi;
+      document.getElementById('rcp-tgl').textContent = String(p.Tanggal_Bayar).slice(0,10);
+      document.getElementById('rcp-tgl-ttd').textContent = String(p.Tanggal_Bayar).slice(0,10);
+      document.getElementById('rcp-nama').textContent = `${p.ID_Murid} - ${p.Nama_Murid}`;
+      document.getElementById('rcp-jenis').textContent = p.Jenis_Pembayaran;
+      document.getElementById('rcp-bulan').textContent = p.Untuk_Bulan;
+      document.getElementById('rcp-metode').textContent = p.Metode_Bayar;
+      document.getElementById('rcp-nominal').textContent = formatRp(p.Nominal);
+      document.getElementById('receipt-modal').classList.remove('hidden');
+      document.getElementById('receipt-modal').classList.add('flex');
+    }
+
+    function closeReceipt() {
+      document.getElementById('receipt-modal').classList.add('hidden');
+      document.getElementById('receipt-modal').classList.remove('flex');
+    }
+
+    function downloadReceiptPDF() {
+      const element = document.getElementById('receipt-box');
+      const noKwitansi = document.getElementById('rcp-no').textContent;
+      html2pdf().from(element).set({
+        margin: 10,
+        filename: `Kwitansi_${noKwitansi}.pdf`,
+        html2canvas: { scale: 2 },
+        jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a5' }
+      }).save();
+    }
+
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
+  </script>
 </body>
 </html>
