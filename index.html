@@ -298,6 +298,16 @@
           </select>
           <input type="text" name="keterangan" required placeholder="Keterangan Pengeluaran" class="border rounded-lg px-3 py-2 text-sm md:col-span-2" />
           <input type="number" name="nominal" required placeholder="Nominal Keluar (Rp)" class="border rounded-lg px-3 py-2 text-sm" />
+          
+          <div class="md:col-span-2">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Upload Foto Bukti Struk / Nota (Opsional)</label>
+            <input type="file" id="pengeluaran-struk-file" accept="image/*" class="w-full border rounded-lg px-3 py-1.5 text-sm bg-slate-50" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Atau Tempel Link Struk</label>
+            <input type="text" name="bukti_struk" placeholder="https://drive.google.com/..." class="w-full border rounded-lg px-3 py-2 text-sm" />
+          </div>
+
           <button type="submit" class="md:col-span-3 bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-lg text-sm">
             Catat Pengeluaran & Hitung Sisa Saldo
           </button>
@@ -312,6 +322,7 @@
                 <th class="p-3">Kategori</th>
                 <th class="p-3">Keterangan</th>
                 <th class="p-3">Nominal Keluar</th>
+                <th class="p-3">Bukti Struk</th>
                 <th class="p-3">Sisa Saldo</th>
               </tr>
             </thead>
@@ -596,12 +607,16 @@
         `;
       }).join('');
 
-      // 4. Tabel Pengeluaran & Sisa Saldo
+      // 4. Tabel Pengeluaran & Sisa Saldo + Bukti Struk
       let totalKeluar = 0;
       document.getElementById('tbody-pengeluaran').innerHTML = (GLOBAL_DATA.pengeluaran || []).map(out => {
         const nom = Number(String(out.Nominal).replace(/[^0-9]/g, '')) || 0;
         totalKeluar += nom;
         const sisa = totalMasuk - totalKeluar;
+        const linkStruk = out.Bukti_Struk && String(out.Bukti_Struk).startsWith('http')
+          ? `<a href="${out.Bukti_Struk}" target="_blank" class="inline-block bg-amber-100 text-amber-800 hover:bg-amber-200 text-xs font-bold px-2.5 py-1 rounded">📎 Lihat Struk</a>`
+          : `<span class="text-xs text-slate-400">-</span>`;
+
         return `
           <tr>
             <td class="p-3 font-mono text-xs">${out.ID_Pengeluaran}</td>
@@ -609,6 +624,7 @@
             <td class="p-3">${out.Kategori}</td>
             <td class="p-3">${out.Keterangan}</td>
             <td class="p-3 text-rose-600 font-semibold">${formatRp(nom)}</td>
+            <td class="p-3">${linkStruk}</td>
             <td class="p-3 font-bold text-sky-800">${formatRp(sisa)}</td>
           </tr>
         `;
@@ -705,6 +721,14 @@
     document.getElementById('form-pengeluaran').addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(e.target).entries());
+      const fileInput = document.getElementById('pengeluaran-struk-file');
+
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        data.strukName = file.name;
+        data.strukBase64 = await toBase64(file);
+      }
+
       const res = await callGAS({ action: 'addPengeluaran', data });
       alert(res.message);
       e.target.reset();
