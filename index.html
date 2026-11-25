@@ -18,7 +18,6 @@
 <body class="bg-slate-100 text-slate-800 font-sans">
 
   <script>
-    // TEMPEL URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI:
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxwDTzX4uVd6RCn3qJwYoDFfXhzYCcLhptXZrrRGXQl5-IrfJ-AC3KtNHqN4rzgHcY2-A/exec";
   </script>
 
@@ -368,62 +367,6 @@
         </div>
       </section>
 
-      <!-- MODAL SERTIFIKAT KELULUSAN PDF -->
-      <div id="cert-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50 overflow-y-auto">
-        <div class="bg-white rounded-xl max-w-4xl w-full p-6 space-y-4 my-auto">
-          <div id="cert-box" class="border-[10px] border-double border-amber-500 p-8 rounded-lg bg-gradient-to-b from-amber-50/40 via-white to-sky-50/40 text-slate-900 relative">
-            <div class="border-2 border-sky-800 p-6 text-center space-y-3">
-              <p class="text-xs font-bold tracking-[0.25em] text-sky-700 uppercase">Lembaga Pendidikan Anak Usia Dini</p>
-              <h2 class="text-3xl font-extrabold text-sky-900 tracking-wide">BIMBA BINTANG JUNIOR</h2>
-              <p class="text-xs text-slate-600">Unit Top Putera • Perumahan Top Putra, Pagaden</p>
-              
-              <div class="py-2">
-                <span class="inline-block bg-amber-500 text-white text-sm font-extrabold px-6 py-1.5 rounded-full tracking-widest uppercase shadow-sm">
-                  SERTIFIKAT KELULUSAN
-                </span>
-                <p class="text-xs font-mono text-slate-500 mt-1.5">Nomor: <span id="cert-no" class="font-bold text-slate-700">-</span></p>
-              </div>
-
-              <p class="text-sm text-slate-600 pt-1">Diberikan dengan bangga kepada:</p>
-              
-              <div class="flex flex-col items-center justify-center gap-2 my-2">
-                <img id="cert-photo" src="" alt="Foto Siswa" class="w-24 h-28 object-cover rounded-lg border-2 border-amber-500 shadow-sm bg-slate-100" />
-                <h3 id="cert-nama" class="text-2xl font-extrabold text-slate-900 underline decoration-amber-500 decoration-2 underline-offset-4 uppercase">NAMA SISWA</h3>
-                <p class="text-xs font-semibold text-slate-500">ID Peserta: <span id="cert-id">-</span></p>
-              </div>
-
-              <p class="text-sm text-slate-700 max-w-xl mx-auto leading-relaxed">
-                Telah menyelesaikan program bimbingan belajar tingkat <b id="cert-level" class="text-sky-900">Level 3</b> 
-                dengan predikat <b id="cert-predikat" class="text-emerald-700">Sangat Baik</b>.
-              </p>
-              <p id="cert-catatan" class="text-xs italic text-slate-500 max-w-lg mx-auto"></p>
-
-              <div class="grid grid-cols-2 gap-8 pt-6 text-xs text-slate-700 max-w-xl mx-auto">
-                <div class="text-center">
-                  <p>Mengetahui,</p>
-                  <p class="font-semibold">Kepala Unit Top Putera</p>
-                  <div class="h-14"></div>
-                  <p class="font-bold underline">Siti Nurhaliza, S.Pd</p>
-                </div>
-                <div class="text-center">
-                  <p>Pagaden, <span id="cert-tgl">-</span></p>
-                  <p class="font-semibold">Motivator / Pembimbing</p>
-                  <div class="h-14"></div>
-                  <p class="font-bold underline">Bimba Bintang Junior</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="no-print flex justify-end gap-2">
-            <button onclick="closeCert()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded-lg text-sm font-semibold">Tutup</button>
-            <button onclick="window.print()" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-bold">🖨️ Print</button>
-            <button onclick="downloadCertPDF()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-bold">⬇️ Download Sertifikat PDF</button>
-          </div>
-        </div>
-      </div>
-      </section>
-
       <!-- 7. TAB PERSETUJUAN ADMIN (PERBAHARUI 6 BULAN SEKALI) -->
       <section id="tab-admin" class="tab-section hidden space-y-6">
         <h1 class="text-2xl font-bold">Persetujuan & Perpanjangan Akses User (Per 6 Bulan)</h1>
@@ -494,6 +437,61 @@
         <button onclick="closeReceipt()" class="px-4 py-2 bg-slate-200 rounded-lg text-sm font-semibold">Tutup</button>
         <button onclick="window.print()" class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-bold">🖨️ Print</button>
         <button onclick="downloadReceiptPDF()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-bold">⬇️ Download PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL SERTIFIKAT KELULUSAN PDF ==================== -->
+  <div id="cert-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50 overflow-y-auto">
+    <div class="bg-white rounded-xl max-w-4xl w-full p-6 space-y-4 my-auto">
+      <div id="cert-box" class="border-[10px] border-double border-amber-500 p-8 rounded-lg bg-gradient-to-b from-amber-50/40 via-white to-sky-50/40 text-slate-900 relative">
+        <div class="border-2 border-sky-800 p-6 text-center space-y-3">
+          <p class="text-xs font-bold tracking-[0.25em] text-sky-700 uppercase">Lembaga Pendidikan Anak Usia Dini</p>
+          <h2 class="text-3xl font-extrabold text-sky-900 tracking-wide">BIMBA BINTANG JUNIOR</h2>
+          <p class="text-xs text-slate-600">Unit Top Putera • Perumahan Top Putra, Pagaden</p>
+          
+          <div class="py-2">
+            <span class="inline-block bg-amber-500 text-white text-sm font-extrabold px-6 py-1.5 rounded-full tracking-widest uppercase shadow-sm">
+              SERTIFIKAT KELULUSAN
+            </span>
+            <p class="text-xs font-mono text-slate-500 mt-1.5">Nomor: <span id="cert-no" class="font-bold text-slate-700">-</span></p>
+          </div>
+
+          <p class="text-sm text-slate-600 pt-1">Diberikan dengan bangga kepada:</p>
+          
+          <div class="flex flex-col items-center justify-center gap-2 my-2">
+            <img id="cert-photo" src="" alt="Foto Siswa" class="w-24 h-28 object-cover rounded-lg border-2 border-amber-500 shadow-sm bg-slate-100" />
+            <h3 id="cert-nama" class="text-2xl font-extrabold text-slate-900 underline decoration-amber-500 decoration-2 underline-offset-4 uppercase">NAMA SISWA</h3>
+            <p class="text-xs font-semibold text-slate-500">ID Peserta: <span id="cert-id">-</span></p>
+          </div>
+
+          <p class="text-sm text-slate-700 max-w-xl mx-auto leading-relaxed">
+            Telah menyelesaikan program bimbingan belajar tingkat <b id="cert-level" class="text-sky-900">Level 3</b> 
+            dengan predikat <b id="cert-predikat" class="text-emerald-700">Sangat Baik</b>.
+          </p>
+          <p id="cert-catatan" class="text-xs italic text-slate-500 max-w-lg mx-auto"></p>
+
+          <div class="grid grid-cols-2 gap-8 pt-6 text-xs text-slate-700 max-w-xl mx-auto">
+            <div class="text-center">
+              <p>Mengetahui,</p>
+              <p class="font-semibold">Kepala Unit Top Putera</p>
+              <div class="h-14"></div>
+              <p class="font-bold underline">Siti Nurhaliza, S.Pd</p>
+            </div>
+            <div class="text-center">
+              <p>Pagaden, <span id="cert-tgl">-</span></p>
+              <p class="font-semibold">Motivator / Pembimbing</p>
+              <div class="h-14"></div>
+              <p class="font-bold underline">Bimba Bintang Junior</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-print flex justify-end gap-2">
+        <button onclick="closeCert()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded-lg text-sm font-semibold">Tutup</button>
+        <button onclick="window.print()" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-bold">🖨️ Print</button>
+        <button onclick="downloadCertPDF()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-bold">⬇️ Download Sertifikat PDF</button>
       </div>
     </div>
   </div>
@@ -645,7 +643,7 @@
 
       // 3. Tabel Pembayaran + Tombol Cetak Kwitansi
       let totalMasuk = 0;
-      document.getElementById('tbody-pembayaran').innerHTML = (GLOBAL_DATA.pembayaran || []).slice().reverse().map((p, idx) => {
+      document.getElementById('tbody-pembayaran').innerHTML = (GLOBAL_DATA.pembayaran || []).slice().reverse().map((p) => {
         const nom = Number(String(p.Nominal).replace(/[^0-9]/g, '')) || 0;
         totalMasuk += nom;
         return `
@@ -707,39 +705,6 @@
           </td>
         </tr>
       `).join('');
-
-      // --- SERTIFIKAT KELULUSAN & DOWNLOAD PDF ---
-      function openCert(al) {
-        const fotoDefault = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(al.Nama_Lengkap) + '&background=0284c7&color=fff';
-        document.getElementById('cert-no').textContent = al.No_Sertifikat || '-';
-        document.getElementById('cert-id').textContent = al.ID_Murid || '-';
-        document.getElementById('cert-nama').textContent = al.Nama_Lengkap || '-';
-        document.getElementById('cert-level').textContent = al.Level_Terakhir || 'Level 3';
-        document.getElementById('cert-predikat').textContent = al.Predikat || 'Sangat Baik';
-        document.getElementById('cert-catatan').textContent = al.Catatan_Kelulusan ? `"${al.Catatan_Kelulusan}"` : '';
-        document.getElementById('cert-tgl').textContent = String(al.Tanggal_Lulus || '').slice(0, 10);
-        document.getElementById('cert-photo').src = al.Photo || fotoDefault;
-
-        document.getElementById('cert-modal').classList.remove('hidden');
-        document.getElementById('cert-modal').classList.add('flex');
-      }
-
-      function closeCert() {
-        document.getElementById('cert-modal').classList.add('hidden');
-        document.getElementById('cert-modal').classList.remove('flex');
-      }
-
-      function downloadCertPDF() {
-        const element = document.getElementById('cert-box');
-        const nama = document.getElementById('cert-nama').textContent.replace(/\s+/g, '_');
-        html2pdf().from(element).set({
-          margin: 8,
-          filename: `Sertifikat_Kelulusan_${nama}.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true },
-          jsPDF: { orientation: 'landscape', unit: 'mm', format: 'a4' }
-        }).save();
-      }
 
       // 6. Tabel Persetujuan User Admin
       document.getElementById('tbody-users').innerHTML = (GLOBAL_DATA.users || []).map(u => `
@@ -878,6 +843,39 @@
         filename: `Kwitansi_${noKwitansi}.pdf`,
         html2canvas: { scale: 2 },
         jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a5' }
+      }).save();
+    }
+
+    // --- SERTIFIKAT KELULUSAN & DOWNLOAD PDF ---
+    function openCert(al) {
+      const fotoDefault = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(al.Nama_Lengkap) + '&background=0284c7&color=fff';
+      document.getElementById('cert-no').textContent = al.No_Sertifikat || '-';
+      document.getElementById('cert-id').textContent = al.ID_Murid || '-';
+      document.getElementById('cert-nama').textContent = al.Nama_Lengkap || '-';
+      document.getElementById('cert-level').textContent = al.Level_Terakhir || 'Level 3';
+      document.getElementById('cert-predikat').textContent = al.Predikat || 'Sangat Baik';
+      document.getElementById('cert-catatan').textContent = al.Catatan_Kelulusan ? `"${al.Catatan_Kelulusan}"` : '';
+      document.getElementById('cert-tgl').textContent = String(al.Tanggal_Lulus || '').slice(0, 10);
+      document.getElementById('cert-photo').src = al.Photo || fotoDefault;
+
+      document.getElementById('cert-modal').classList.remove('hidden');
+      document.getElementById('cert-modal').classList.add('flex');
+    }
+
+    function closeCert() {
+      document.getElementById('cert-modal').classList.add('hidden');
+      document.getElementById('cert-modal').classList.remove('flex');
+    }
+
+    function downloadCertPDF() {
+      const element = document.getElementById('cert-box');
+      const nama = document.getElementById('cert-nama').textContent.replace(/\s+/g, '_');
+      html2pdf().from(element).set({
+        margin: 8,
+        filename: `Sertifikat_Kelulusan_${nama}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { orientation: 'landscape', unit: 'mm', format: 'a4' }
       }).save();
     }
 
