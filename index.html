@@ -456,7 +456,7 @@
   <div id="print-staging" class="print-staging"></div>
 
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx8lQZvJNGK26LSrF6_kRV88BB9HO2BT7fk7CZxhCXEA5IikSe3dbOXnF1Njajv2izavA/exec";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwxHd7nbq5dXJna0AwVDFZ3vcRY98LhAF1DIqrXJLbHKGiJRu4e3KxCemg0m17-JF_oPQ/exec";
 
     const MENU_CONFIG = {
       Data_Murid: {
@@ -552,11 +552,11 @@
       },
       Users: {
         label: "Manajemen User & Masa Aktif",
-        idField: "ID_User",
+        idField: "ID",
         adminOnly: true,
         fields: [
-          "ID_User", "Nama", "Email_Username", "Password", "Role",
-          "Status_Akun", "Tanggal_Daftar", "Tanggal_Aktif", "Tanggal_Expired"
+          "ID", "Nama Lengkap", "Email", "Password", "ROLE",
+          "Status", "Tanggal Pendaftaran", "Tanggal_Kadaluarsa"
         ]
       }
     };
@@ -776,7 +776,10 @@
         html += `<tr><td colspan="${displayCols.length + 1}">Belum ada data.</td></tr>`;
       } else {
         rows.forEach((row) => {
-          const idVal = row[cfg.idField];
+          const idVal =
+            currentSheet === "Users"
+              ? (row.ID || row.ID_User || row.Email || "")
+              : row[cfg.idField];
           html += `<tr>`;
           displayCols.forEach((col) => {
             const val = row[col] ?? "";
