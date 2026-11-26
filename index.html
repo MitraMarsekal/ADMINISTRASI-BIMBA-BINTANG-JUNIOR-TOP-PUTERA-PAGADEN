@@ -662,7 +662,75 @@
       if (btnEl) btnEl.classList.add("active");
       document.getElementById("active-menu-title").textContent = MENU_CONFIG[sheetKey].label;
       document.getElementById("sidebar").classList.remove("open");
-      renderTable();
+      function renderTable() {
+      const container = document.getElementById("table-container");
+      if (!currentSheet) return;
+      const cfg = MENU_CONFIG[currentSheet];
+      const rows = dbCache[currentSheet] || [];
+
+      const displayCols = cfg.fields.filter((f) => !(currentSheet === "Users" && f === "Password"));
+      let html = `<table><thead><tr>`;
+      displayCols.forEach((col) => {
+        html += `<th>${col.replaceAll("_", " ")}</th>`;
+      });
+      html += `<th>Aksi</th></tr></thead><tbody>`;
+
+      if (rows.length === 0) {
+        html += `<tr><td colspan="${displayCols.length + 1}">Belum ada data.</td></tr>`;
+      } else {
+        rows.forEach((row) => {
+          const idVal =
+            currentSheet === "Users"
+              ? (row.Username || row.ID_User || row.Email || "")
+              : row[cfg.idField];
+
+          html += `<tr>`;
+          displayCols.forEach((col) => {
+            let val = row[col];
+
+            if (currentSheet === "Users") {
+              if (col === "ID_User") val = row.Username ?? row.ID_User ?? "";
+              else if (col === "Nama") val = row["Nama Lengkap"] ?? row.Nama ?? "";
+              else if (col === "Email_Username") val = row.Email ?? row.Email_Username ?? row.Username ?? "";
+              else if (col === "Role") val = row.ROLE ?? row.Role ?? "";
+              else if (col === "Status_Akun") val = row.Status ?? row.Status_Akun ?? "";
+              else if (col === "Tanggal_Daftar") val = row["Tanggal Pendaftaran"] ?? row.Tanggal_Daftar ?? "";
+              else if (col === "Tanggal_Aktif") val = row["Tanggal Aktif"] ?? row.Tanggal_Aktif ?? "";
+              else if (col === "Tanggal_Expired") val = row.Tanggal_Kadaluarsa ?? row.Tanggal_Expired ?? "";
+            }
+
+            if (val === undefined || val === null) val = "";
+
+            if (String(val).startsWith("http")) {
+              html += `<td><img src="${val}" class="thumb-img" alt="${col}" /></td>`;
+            } else {
+              html += `<td>${escapeHtml(String(val))}</td>`;
+            }
+          });
+
+          html += `<td>`;
+          if (currentSheet === "Users" && currentUser.Role === "Admin") {
+            html += `<button class="btn-yellow small" onclick="approveUser('${escapeAttr(String(idVal))}')">Setujui</button> `;
+            html += `<button class="btn-sky small" onclick="extendUser('${escapeAttr(String(idVal))}')">Perpanjang 6 Bln</button> `;
+          }
+          if (currentSheet === "Riwayat_Lulus" && currentUser.Role === "Admin") {
+            html += `<button class="btn-yellow small" onclick="downloadCertificatePDF('${encodeURIComponent(JSON.stringify(row))}')">PDF A4 Sertifikat</button> `;
+          }
+          if (currentSheet === "Pembayaran_SPP" && currentUser.Role === "Admin") {
+            html += `<button class="btn-sky small" onclick="printInvoicePDF('${encodeURIComponent(JSON.stringify(row))}')">Cetak Invoice PDF</button> `;
+          }
+          if (currentUser.Role === "Admin") {
+            html += `<button class="btn-orange small" onclick="openFormModal('${escapeAttr(String(idVal))}')">Edit</button> `;
+            html += `<button class="btn-red small" onclick="deleteItem('${escapeAttr(String(idVal))}')">Hapus</button>`;
+          } else {
+            html += `<span class="badge-yellow">Input Guru</span>`;
+          }
+          html += `</td></tr>`;
+        });
+      }
+
+      html += `</tbody></table>`;
+      container.innerHTML = html;
     }
 
     function toggleSidebar() {
