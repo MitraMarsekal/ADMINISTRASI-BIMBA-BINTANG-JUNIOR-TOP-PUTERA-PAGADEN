@@ -662,7 +662,36 @@
       if (btnEl) btnEl.classList.add("active");
       document.getElementById("active-menu-title").textContent = MENU_CONFIG[sheetKey].label;
       document.getElementById("sidebar").classList.remove("open");
-      function renderTable() {
+      renderTable();
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+    }
+
+    function logout() {
+      currentUser = null;
+      dbCache = {};
+      document.getElementById("app-shell").classList.add("hidden");
+      document.getElementById("auth-screen").classList.remove("hidden");
+    }
+
+    async function refreshAllData() {
+      if (!currentUser) return;
+      try {
+        const url = `${WEB_APP_URL}?action=getAllData&role=${encodeURIComponent(currentUser.Role)}&t=${Date.now()}`;
+        const res = await fetch(url);
+        const json = await res.json();
+        if (json.status === "ok") {
+          dbCache = json.data;
+          renderTable();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderTable() {
       const container = document.getElementById("table-container");
       if (!currentSheet) return;
       const cfg = MENU_CONFIG[currentSheet];
@@ -681,24 +710,20 @@
         rows.forEach((row) => {
           const idVal =
             currentSheet === "Users"
-              ? (row.Username || row.ID_User || row.Email || "")
+              ? (row.ID || row.ID_User || row.Email || "")
               : row[cfg.idField];
-
           html += `<tr>`;
           displayCols.forEach((col) => {
             let val = row[col];
-
             if (currentSheet === "Users") {
-              if (col === "ID_User") val = row.Username ?? row.ID_User ?? "";
-              else if (col === "Nama") val = row["Nama Lengkap"] ?? row.Nama ?? "";
-              else if (col === "Email_Username") val = row.Email ?? row.Email_Username ?? row.Username ?? "";
-              else if (col === "Role") val = row.ROLE ?? row.Role ?? "";
-              else if (col === "Status_Akun") val = row.Status ?? row.Status_Akun ?? "";
-              else if (col === "Tanggal_Daftar") val = row["Tanggal Pendaftaran"] ?? row.Tanggal_Daftar ?? "";
-              else if (col === "Tanggal_Aktif") val = row["Tanggal Aktif"] ?? row.Tanggal_Aktif ?? "";
-              else if (col === "Tanggal_Expired") val = row.Tanggal_Kadaluarsa ?? row.Tanggal_Expired ?? "";
+              if (col === "ID") val = row.ID ?? row.ID_User ?? row.Username ?? "";
+              else if (col === "Nama Lengkap") val = row["Nama Lengkap"] ?? row.Nama ?? "";
+              else if (col === "Email") val = row.Email ?? row.Email_Username ?? "";
+              else if (col === "ROLE") val = row.ROLE ?? row.Role ?? "";
+              else if (col === "Status") val = row.Status ?? row.Status_Akun ?? "";
+              else if (col === "Tanggal Pendaftaran") val = row["Tanggal Pendaftaran"] ?? row.Tanggal_Daftar ?? "";
+              else if (col === "Tanggal_Kadaluarsa") val = row.Tanggal_Kadaluarsa ?? row.Tanggal_Expired ?? "";
             }
-
             if (val === undefined || val === null) val = "";
 
             if (String(val).startsWith("http")) {
