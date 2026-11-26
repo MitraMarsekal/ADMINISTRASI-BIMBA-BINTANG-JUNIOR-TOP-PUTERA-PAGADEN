@@ -85,29 +85,41 @@
           </div>
         </div>
 
+        <ul id="sidebar-menu" class="p-3 space-y-1 text-sm">
+        <li class="menu-admin"><a href="#" onclick="bukaHalaman('dashboard')">Dashboard</a></li>
+        <li class="menu-admin"><a href="#" onclick="bukaHalaman('data-murid')">Data Murid</a></li>
+        <li class="menu-admin"><a href="#" onclick="bukaHalaman('keuangan')">Administrasi & SPP</a></li>
+        <li class="menu-admin"><a href="#" onclick="bukaHalaman('manajemen-user')">Persetujuan User</a></li>
+
+        <li class="menu-guru"><a href="#" onclick="bukaHalaman('absensi')">Absensi Harian</a></li>
+        <li class="menu-guru"><a href="#" onclick="bukaHalaman('perkembangan')">Perkembangan Siswa</a></li>
+      </ul>
+    </div>
+  </aside>
+
         <nav class="p-3 space-y-1 text-sm">
-          <button type="button" onclick="showTab('tab-murid', this)" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg bg-sky-600 font-semibold flex items-center gap-2">
+          <button type="button" onclick="showTab('tab-murid', this)" class="nav-btn menu-admin-only w-full text-left px-3 py-2.5 rounded-lg bg-sky-600 font-semibold flex items-center gap-2">
             🪪 ID & Data Murid (Foto)
           </button>
-          <button type="button" onclick="showTab('tab-absensi', this)" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2">
+          <button type="button" onclick="showTab('tab-absensi', this)" class="nav-btn menu-guru-only w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2">
             📋 Absensi Harian
           </button>
-          <button type="button" onclick="showTab('tab-perkembangan', this)" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2">
+          <button type="button" onclick="showTab('tab-perkembangan', this)" class="nav-btn menu-guru-only w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2">
             📈 Perkembangan Siswa
           </button>
-          <button type="button" onclick="showTab('tab-pembayaran', this)" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2">
+          <button type="button" onclick="showTab('tab-pembayaran', this)" class="nav-btn menu-admin-only w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2">
             🧾 SPP & Tanda Terima PDF
           </button>
-          <button type="button" onclick="showTab('tab-keuangan', this)" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2">
+          <button type="button" onclick="showTab('tab-keuangan', this)" class="nav-btn menu-admin-only w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2">
             💰 Operasional & Sisa Saldo
           </button>
-          <button type="button" onclick="showTab('tab-stok-modul', this)" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2">
+          <button type="button" onclick="showTab('tab-stok-modul', this)" class="nav-btn menu-admin-only w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2">
             📦 Stok Modul & ATK
           </button>
-          <button type="button" onclick="showTab('tab-lulus', this)" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2">
+          <button type="button" onclick="showTab('tab-lulus', this)" class="nav-btn menu-admin-only w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2">
             🎓 Riwayat Siswa Lulus
           </button>
-          <button type="button" onclick="showTab('tab-admin', this)" id="menu-admin-only" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2 text-amber-300">
+          <button type="button" onclick="showTab('tab-admin', this)" id="menu-admin-only" class="nav-btn menu-admin-only w-full text-left px-3 py-2.5 rounded-lg hover:bg-sky-800 flex items-center gap-2 text-amber-300">
             🔐 Persetujuan User (6 Bln)
           </button>
         </nav>
@@ -623,7 +635,7 @@
           CURRENT_USER = res.user;
           document.getElementById('auth-screen').classList.add('hidden');
           document.getElementById('app-screen').classList.remove('hidden');
-          document.getElementById('user-display-name').textContent = `${res.user.nama} (${res.user.role})`;
+          terapkanHakAksesMenu(user.role); // sesuaikan jika nama variabelnya berbeda, misal data.role atau currentUser.role
           document.getElementById('user-display-exp').textContent = res.user.expired;
           if (res.user.role !== 'Admin') {
             document.getElementById('menu-admin-only').classList.add('hidden');
@@ -672,6 +684,26 @@
         btnEl.classList.add('bg-sky-600', 'font-semibold');
       }
     }
+
+    function terapkanHakAksesMenu(role) {
+  const r = (role || '').toString().trim().toLowerCase();
+  const isGuruOrMotivator = r === 'motivator' || r === 'guru';
+
+  // Sembunyikan menu selain Absensi & Perkembangan untuk Motivator/Guru
+  document.querySelectorAll('.menu-admin-only').forEach((btn) => {
+    btn.classList.toggle('hidden', isGuruOrMotivator);
+  });
+
+  if (isGuruOrMotivator) {
+    // Arahkan langsung ke tab Absensi Harian
+    const btnAbsensi = document.querySelector(".menu-guru-only[onclick*=\"'tab-absensi'\"]");
+    showTab('tab-absensi', btnAbsensi || null);
+  } else {
+    // Tampilan normal untuk Admin: buka tab pertama (Data Murid)
+    const btnMurid = document.querySelector(".menu-admin-only[onclick*=\"'tab-murid'\"]");
+    showTab('tab-murid', btnMurid || null);
+  }
+}
 
     async function loadAllData() {
       const res = await callGAS({ action: 'getAllData' });
