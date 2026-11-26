@@ -456,7 +456,7 @@
   <div id="print-staging" class="print-staging"></div>
 
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwyZ-UhFHNVpCqUrypbiBnAs2OVMbAhvUenxtuz-dbyc0cWzRU6WvNb-DoDLUeD8uyj/exec";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwTXakpKK-5ZqS1qpCCY_T8Bj0VCYAO9OvfgdUVWZhSxIZNdQvARacIvTvCe4OtzuBSWw/exec";
 
     const MENU_CONFIG = {
       Data_Murid: {
@@ -583,24 +583,26 @@
 
     async function handleLoginSubmit(e) {
       e.preventDefault();
-      const payload = {
-        Email_Username: document.getElementById("login-username").value.trim(),
-        Password: document.getElementById("login-password").value
-      };
+      const username = document.getElementById("login-username").value.trim();
+      const password = document.getElementById("login-password").value;
+
       Swal.fire({ title: "Memeriksa akun...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
       try {
-        const res = await postApi({ action: "login", payload });
+        const url = `${WEB_APP_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&t=${Date.now()}`;
+        const res = await fetch(url);
+        const json = await res.json();
         Swal.close();
-        if (res.status !== "ok") {
-          return Swal.fire("Akses Ditolak", res.message, "error");
+
+        if (json.status !== "ok") {
+         return Swal.fire("Akses Ditolak", json.message, "error");
         }
-        currentUser = res.user;
+        currentUser = json.user;
         initSessionUI();
       } catch (err) {
+        Swal.close();
         Swal.fire("Error", "Gagal terhubung ke server: " + err.message, "error");
       }
     }
-
     async function handleRegisterSubmit(e) {
       e.preventDefault();
       const payload = {
