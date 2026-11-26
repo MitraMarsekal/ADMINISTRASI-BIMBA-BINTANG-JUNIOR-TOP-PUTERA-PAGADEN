@@ -3,10 +3,359 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SIM Bimbel — Bintang Junior Unit Top Putra</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>BIMBA Bintang Junior Unit Top Putra</title>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    :root {
+      --sky-main: #38BDF8;
+      --sky-soft: #E0F2FE;
+      --sky-dark: #0284C7;
+      --yellow: #FACC15;
+      --orange: #FB923C;
+      --orange-dark: #EA580C;
+      --red: #EF4444;
+      --red-dark: #DC2626;
+      --text: #0F172A;
+      --border: #BAE6FD;
+      --white: #FFFFFF;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      background: var(--sky-soft);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Auth Screen */
+    .auth-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--sky-soft) 0%, var(--sky-main) 100%);
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 430px;
+      background: var(--white);
+      border: 2px solid var(--sky-main);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 12px 28px rgba(2, 132, 199, 0.15);
+    }
+
+    .brand-header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .brand-header h1 {
+      font-size: 1.4rem;
+      margin-top: 8px;
+      color: var(--sky-dark);
+    }
+
+    .brand-header p {
+      font-size: 0.85rem;
+      color: #475569;
+      margin-top: 4px;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .tab-btn {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: var(--sky-soft);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: var(--yellow);
+      color: var(--text);
+    }
+
+    /* Topbar & Layout */
+    .topbar {
+      background: var(--sky-main);
+      color: var(--white);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .main-layout {
+      display: flex;
+      min-height: calc(100vh - 58px);
+    }
+
+    .sidebar {
+      width: 245px;
+      background: var(--white);
+      border-right: 2px solid var(--border);
+      padding: 12px;
+      flex-shrink: 0;
+    }
+
+    .nav-item {
+      width: 100%;
+      text-align: left;
+      padding: 11px 14px;
+      margin-bottom: 6px;
+      border: none;
+      border-radius: 10px;
+      background: var(--sky-soft);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .nav-item:hover {
+      background: var(--yellow);
+    }
+
+    .nav-item.active {
+      background: var(--orange);
+      color: var(--white);
+    }
+
+    .content-area {
+      flex: 1;
+      padding: 20px;
+      overflow-x: auto;
+    }
+
+    .content-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Buttons & Badges */
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .btn-orange {
+      background: var(--orange);
+      color: var(--white);
+      padding: 10px 16px;
+    }
+
+    .btn-orange:hover {
+      background: var(--orange-dark);
+    }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color: var(--text);
+      padding: 10px 14px;
+    }
+
+    .btn-red {
+      background: var(--red);
+      color: var(--white);
+      padding: 8px 12px;
+    }
+
+    .btn-red:hover {
+      background: var(--red-dark);
+    }
+
+    .btn-sky {
+      background: var(--sky-main);
+      color: var(--white);
+      padding: 6px 10px;
+      font-size: 0.8rem;
+    }
+
+    .btn-yellow.small,
+    .btn-orange.small,
+    .btn-red.small {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+    }
+
+    .full-width {
+      width: 100%;
+    }
+
+    .icon-btn {
+      background: var(--yellow);
+      color: var(--text);
+      padding: 8px 12px;
+      font-size: 1.1rem;
+    }
+
+    .badge-yellow {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--text);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* Table Card */
+    .table-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: var(--sky-main);
+      color: var(--white);
+      padding: 10px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--sky-soft);
+      white-space: nowrap;
+    }
+
+    tr:hover td {
+      background: #F0F9FF;
+    }
+
+    .thumb-img {
+      width: 44px;
+      height: 44px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    /* Forms & Modal */
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1.5px solid var(--sky-main);
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+
+    .modal-box {
+      background: var(--white);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 560px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 20px;
+      border: 3px solid var(--sky-main);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    /* Print Staging */
+    .print-staging {
+      position: fixed;
+      left: -9999px;
+      top: 0;
+    }
+
+    /* Responsif HP & Tablet */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 58px;
+        bottom: 0;
+        z-index: 25;
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- Layar Login & Registrasi -->
@@ -106,874 +455,527 @@
   <!-- Area Tersembunyi untuk Render PDF Sertifikat A4 & Invoice SPP -->
   <div id="print-staging" class="print-staging"></div>
 
-  <script src="app.js"></script>
-</body>
-</html>
-:root {
-  --sky-main: #38BDF8;
-  --sky-soft: #E0F2FE;
-  --sky-dark: #0284C7;
-  --yellow: #FACC15;
-  --orange: #FB923C;
-  --orange-dark: #EA580C;
-  --red: #EF4444;
-  --red-dark: #DC2626;
-  --text: #0F172A;
-  --border: #BAE6FD;
-  --white: #FFFFFF;
-}
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx67r9t3pZmaW8t_jsQ1tLi4-qOhq7lZJevK7GsLMFy5ZNvAKp3dtt2qMmem_kK-j-q_A/exec";
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-}
+    const MENU_CONFIG = {
+      Data_Murid: {
+        label: "Data Murid",
+        idField: "ID_Murid",
+        adminOnly: true,
+        fields: [
+          "ID_Murid", "Nama_Lengkap", "Nama_Panggilan", "Tanggal_Lahir",
+          "Nama_Orang_Tua", "No_WA_Ortu", "Alamat", "Tanggal_Masuk",
+          "Paket_Jadwal", "Jam_Belajar", "Level_Saat_Ini", "Status",
+          "Total_Jam_Belajar", "Photo"
+        ],
+        fileFields: ["Photo"]
+      },
+      Data_Guru: {
+        label: "Data Guru",
+        idField: "ID_Guru",
+        adminOnly: true,
+        fields: ["ID_Guru", "Nama_Guru", "No_WA", "Jabatan", "Status"]
+      },
+      Absensi_Guru: {
+        label: "Absensi Harian Guru",
+        idField: "ID_Absensi_Guru",
+        adminOnly: false,
+        fields: [
+          "ID_Absensi_Guru", "Tanggal", "ID_Guru", "Nama_Guru",
+          "Jam_Mengajar", "Jumlah_Siswa_Diajar", "Materi_Pelajaran"
+        ]
+      },
+      Absensi_Siswa: {
+        label: "Absensi Harian Siswa",
+        idField: "ID_Absensi",
+        adminOnly: false,
+        fields: [
+          "ID_Absensi", "Tanggal", "ID_Murid", "Nama_Murid",
+          "ID_Guru", "Nama_Guru", "Kehadiran", "Materi_Hari_Ini",
+          "Catatan_Singkat", "Jam_Belajar"
+        ]
+      },
+      Perkembangan_Siswa: {
+        label: "Perkembangan Siswa",
+        idField: "ID_Evaluasi",
+        adminOnly: false,
+        fields: [
+          "ID_Evaluasi", "Tanggal", "ID_Murid", "Nama_Murid",
+          "Level_Saat_Ini", "Aspek_Penilaian", "Modul_atau_Tahap",
+          "Capaian_Skill", "Status_Kelulusan_Modul", "ID_Guru",
+          "Catatan_Untuk_Ortu", "Foto_Hasil_Belajar"
+        ],
+        fileFields: ["Foto_Hasil_Belajar"]
+      },
+      Log_Stok_Modul: {
+        label: "Log Stok Modul",
+        idField: "ID_Log",
+        adminOnly: true,
+        fields: [
+          "ID_Log", "Tanggal_Waktu", "ID_Barang", "Nama_Barang",
+          "Kategori", "Tipe_Mutasi", "Jumlah", "Stok_Akhir",
+          "Keterangan", "Petugas"
+        ]
+      },
+      Riwayat_Lulus: {
+        label: "Riwayat Siswa Lulus",
+        idField: "ID_Murid",
+        adminOnly: true,
+        fields: [
+          "ID_Murid", "Nama_Lengkap", "Tanggal_Masuk", "Tanggal_Lulus",
+          "Level_Terakhir", "Predikat", "No_Sertifikat", "Catatan_Kelulusan",
+          "Photo"
+        ],
+        fileFields: ["Photo"]
+      },
+      Pembayaran_SPP: {
+        label: "Pembayaran SPP",
+        idField: "No_Kuitansi",
+        adminOnly: true,
+        fields: [
+          "No_Kuitansi", "Tanggal_Bayar", "ID_Murid", "Nama_Murid",
+          "Jenis_Pembayaran", "Untuk_Bulan", "Nominal", "Metode_Bayar",
+          "Status_Bayar", "Bukti_Transfer"
+        ],
+        fileFields: ["Bukti_Transfer"]
+      },
+      Operasional_Keuangan: {
+        label: "Pengeluaran Operasional",
+        idField: "ID_Pengeluaran",
+        adminOnly: true,
+        fields: [
+          "ID_Pengeluaran", "Tanggal", "Kategori", "Keterangan",
+          "Nominal", "Bukti_Struk", "Pemasukan", "Sisa_Saldo"
+        ],
+        fileFields: ["Bukti_Struk"]
+      },
+      Users: {
+        label: "Manajemen User & Masa Aktif",
+        idField: "ID_User",
+        adminOnly: true,
+        fields: [
+          "ID_User", "Nama", "Email_Username", "Password", "Role",
+          "Status_Akun", "Tanggal_Daftar", "Tanggal_Aktif", "Tanggal_Expired"
+        ]
+      }
+    };
 
-body {
-  background: var(--sky-soft);
-  color: var(--text);
-  min-height: 100vh;
-}
+    let currentUser = null;
+    let currentSheet = null;
+    let dbCache = {};
+    let editingId = null;
 
-.hidden {
-  display: none !important;
-}
-
-/* Auth Screen */
-.auth-wrapper {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  background: linear-gradient(135deg, var(--sky-soft) 0%, var(--sky-main) 100%);
-}
-
-.auth-card {
-  width: 100%;
-  max-width: 430px;
-  background: var(--white);
-  border: 2px solid var(--sky-main);
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 12px 28px rgba(2, 132, 199, 0.15);
-}
-
-.brand-header {
-  text-align: center;
-  margin-bottom: 18px;
-}
-
-.brand-header h1 {
-  font-size: 1.4rem;
-  margin-top: 8px;
-  color: var(--sky-dark);
-}
-
-.brand-header p {
-  font-size: 0.85rem;
-  color: #475569;
-  margin-top: 4px;
-}
-
-.auth-tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.tab-btn {
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  background: var(--sky-soft);
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.tab-btn.active {
-  background: var(--yellow);
-  color: var(--text);
-}
-
-/* Topbar & Layout */
-.topbar {
-  background: var(--sky-main);
-  color: var(--white);
-  padding: 12px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 30;
-}
-
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.main-layout {
-  display: flex;
-  min-height: calc(100vh - 58px);
-}
-
-.sidebar {
-  width: 245px;
-  background: var(--white);
-  border-right: 2px solid var(--border);
-  padding: 12px;
-  flex-shrink: 0;
-}
-
-.nav-item {
-  width: 100%;
-  text-align: left;
-  padding: 11px 14px;
-  margin-bottom: 6px;
-  border: none;
-  border-radius: 10px;
-  background: var(--sky-soft);
-  color: var(--text);
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.15s;
-}
-
-.nav-item:hover {
-  background: var(--yellow);
-}
-
-.nav-item.active {
-  background: var(--orange);
-  color: var(--white);
-}
-
-.content-area {
-  flex: 1;
-  padding: 20px;
-  overflow-x: auto;
-}
-
-.content-header {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.header-actions {
-  display: flex;
-  gap: 10px;
-}
-
-/* Buttons & Badges */
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  font-weight: 700;
-}
-
-.btn-orange {
-  background: var(--orange);
-  color: var(--white);
-  padding: 10px 16px;
-}
-
-.btn-orange:hover {
-  background: var(--orange-dark);
-}
-
-.btn-yellow {
-  background: var(--yellow);
-  color: var(--text);
-  padding: 10px 14px;
-}
-
-.btn-red {
-  background: var(--red);
-  color: var(--white);
-  padding: 8px 12px;
-}
-
-.btn-red:hover {
-  background: var(--red-dark);
-}
-
-.btn-sky {
-  background: var(--sky-main);
-  color: var(--white);
-  padding: 6px 10px;
-  font-size: 0.8rem;
-}
-
-.btn-yellow.small,
-.btn-orange.small,
-.btn-red.small {
-  padding: 6px 10px;
-  font-size: 0.8rem;
-}
-
-.full-width {
-  width: 100%;
-}
-
-.icon-btn {
-  background: var(--yellow);
-  color: var(--text);
-  padding: 8px 12px;
-  font-size: 1.1rem;
-}
-
-.badge-yellow {
-  display: inline-block;
-  background: var(--yellow);
-  color: var(--text);
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-/* Table Card */
-.table-card {
-  background: var(--white);
-  border: 2px solid var(--border);
-  border-radius: 14px;
-  padding: 14px;
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.88rem;
-}
-
-th {
-  background: var(--sky-main);
-  color: var(--white);
-  padding: 10px;
-  text-align: left;
-  white-space: nowrap;
-}
-
-td {
-  padding: 9px 10px;
-  border-bottom: 1px solid var(--sky-soft);
-  white-space: nowrap;
-}
-
-tr:hover td {
-  background: #F0F9FF;
-}
-
-.thumb-img {
-  width: 44px;
-  height: 44px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-}
-
-/* Forms & Modal */
-.form-group {
-  margin-bottom: 12px;
-}
-
-.form-group label {
-  display: block;
-  font-size: 0.84rem;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  padding: 9px 11px;
-  border: 1.5px solid var(--sky-main);
-  border-radius: 8px;
-  font-size: 0.9rem;
-}
-
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  z-index: 50;
-}
-
-.modal-box {
-  background: var(--white);
-  border-radius: 14px;
-  width: 100%;
-  max-width: 560px;
-  max-height: 88vh;
-  overflow-y: auto;
-  padding: 20px;
-  border: 3px solid var(--sky-main);
-}
-
-.modal-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-}
-
-/* Print Staging */
-.print-staging {
-  position: fixed;
-  left: -9999px;
-  top: 0;
-}
-
-/* Responsif HP & Tablet */
-@media (max-width: 768px) {
-  .sidebar {
-    position: fixed;
-    left: 0;
-    top: 58px;
-    bottom: 0;
-    z-index: 25;
-    transform: translateX(-100%);
-    transition: transform 0.2s ease;
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-  }
-}
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxUt-kkhys2tr7GA5InwMvxCLMNepuj4RFegS9edH6w8WomR3AJE9Mm0ZNU0uN2WM5OJw/exec";
-
-const MENU_CONFIG = {
-  Data_Murid: {
-    label: "Data Murid",
-    idField: "ID_Murid",
-    adminOnly: true,
-    fields: [
-      "ID_Murid", "Nama_Lengkap", "Nama_Panggilan", "Tanggal_Lahir",
-      "Nama_Orang_Tua", "No_WA_Ortu", "Alamat", "Tanggal_Masuk",
-      "Paket_Jadwal", "Jam_Belajar", "Level_Saat_Ini", "Status",
-      "Total_Jam_Belajar", "Photo"
-    ],
-    fileFields: ["Photo"]
-  },
-  Data_Guru: {
-    label: "Data Guru",
-    idField: "ID_Guru",
-    adminOnly: true,
-    fields: ["ID_Guru", "Nama_Guru", "No_WA", "Jabatan", "Status"]
-  },
-  Absensi_Guru: {
-    label: "Absensi Harian Guru",
-    idField: "ID_Absensi_Guru",
-    adminOnly: false,
-    fields: [
-      "ID_Absensi_Guru", "Tanggal", "ID_Guru", "Nama_Guru",
-      "Jam_Mengajar", "Jumlah_Siswa_Diajar", "Materi_Pelajaran"
-    ]
-  },
-  Absensi_Siswa: {
-    label: "Absensi Harian Siswa",
-    idField: "ID_Absensi",
-    adminOnly: false,
-    fields: [
-      "ID_Absensi", "Tanggal", "ID_Murid", "Nama_Murid",
-      "ID_Guru", "Nama_Guru", "Kehadiran", "Materi_Hari_Ini",
-      "Catatan_Singkat", "Jam_Belajar"
-    ]
-  },
-  Perkembangan_Siswa: {
-    label: "Perkembangan Siswa",
-    idField: "ID_Evaluasi",
-    adminOnly: false,
-    fields: [
-      "ID_Evaluasi", "Tanggal", "ID_Murid", "Nama_Murid",
-      "Level_Saat_Ini", "Aspek_Penilaian", "Modul_atau_Tahap",
-      "Capaian_Skill", "Status_Kelulusan_Modul", "ID_Guru",
-      "Catatan_Untuk_Ortu", "Foto_Hasil_Belajar"
-    ],
-    fileFields: ["Foto_Hasil_Belajar"]
-  },
-  Log_Stok_Modul: {
-    label: "Log Stok Modul",
-    idField: "ID_Log",
-    adminOnly: true,
-    fields: [
-      "ID_Log", "Tanggal_Waktu", "ID_Barang", "Nama_Barang",
-      "Kategori", "Tipe_Mutasi", "Jumlah", "Stok_Akhir",
-      "Keterangan", "Petugas"
-    ]
-  },
-  Riwayat_Lulus: {
-    label: "Riwayat Siswa Lulus",
-    idField: "ID_Murid",
-    adminOnly: true,
-    fields: [
-      "ID_Murid", "Nama_Lengkap", "Tanggal_Masuk", "Tanggal_Lulus",
-      "Level_Terakhir", "Predikat", "No_Sertifikat", "Catatan_Kelulusan",
-      "Photo"
-    ],
-    fileFields: ["Photo"]
-  },
-  Pembayaran_SPP: {
-    label: "Pembayaran SPP",
-    idField: "No_Kuitansi",
-    adminOnly: true,
-    fields: [
-      "No_Kuitansi", "Tanggal_Bayar", "ID_Murid", "Nama_Murid",
-      "Jenis_Pembayaran", "Untuk_Bulan", "Nominal", "Metode_Bayar",
-      "Status_Bayar", "Bukti_Transfer"
-    ],
-    fileFields: ["Bukti_Transfer"]
-  },
-  Operasional_Keuangan: {
-    label: "Pengeluaran Operasional",
-    idField: "ID_Pengeluaran",
-    adminOnly: true,
-    fields: [
-      "ID_Pengeluaran", "Tanggal", "Kategori", "Keterangan",
-      "Nominal", "Bukti_Struk", "Pemasukan", "Sisa_Saldo"
-    ],
-    fileFields: ["Bukti_Struk"]
-  },
-  Users: {
-    label: "Manajemen User & Masa Aktif",
-    idField: "ID_User",
-    adminOnly: true,
-    fields: [
-      "ID_User", "Nama", "Email_Username", "Password", "Role",
-      "Status_Akun", "Tanggal_Daftar", "Tanggal_Aktif", "Tanggal_Expired"
-    ]
-  }
-};
-
-let currentUser = null;
-let currentSheet = null;
-let dbCache = {};
-let editingId = null;
-
-function switchAuthTab(mode) {
-  document.getElementById("tab-login").classList.toggle("active", mode === "login");
-  document.getElementById("tab-register").classList.toggle("active", mode === "register");
-  document.getElementById("login-form").classList.toggle("hidden", mode !== "login");
-  document.getElementById("register-form").classList.toggle("hidden", mode !== "register");
-}
-
-async function postApi(body) {
-  const res = await fetch(WEB_APP_URL, {
-    method: "POST",
-    body: JSON.stringify(body)
-  });
-  return res.json();
-}
-
-async function handleLoginSubmit(e) {
-  e.preventDefault();
-  const payload = {
-    Email_Username: document.getElementById("login-username").value.trim(),
-    Password: document.getElementById("login-password").value
-  };
-  Swal.fire({ title: "Memeriksa akun...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-  try {
-    const res = await postApi({ action: "login", payload });
-    Swal.close();
-    if (res.status !== "ok") {
-      return Swal.fire("Akses Ditolak", res.message, "error");
+    function switchAuthTab(mode) {
+      document.getElementById("tab-login").classList.toggle("active", mode === "login");
+      document.getElementById("tab-register").classList.toggle("active", mode === "register");
+      document.getElementById("login-form").classList.toggle("hidden", mode !== "login");
+      document.getElementById("register-form").classList.toggle("hidden", mode !== "register");
     }
-    currentUser = res.user;
-    initSessionUI();
-  } catch (err) {
-    Swal.fire("Error", "Gagal terhubung ke server: " + err.message, "error");
-  }
-}
 
-async function handleRegisterSubmit(e) {
-  e.preventDefault();
-  const payload = {
-    Nama: document.getElementById("reg-nama").value.trim(),
-    Email_Username: document.getElementById("reg-username").value.trim(),
-    Password: document.getElementById("reg-password").value,
-    Role: document.getElementById("reg-role").value
-  };
-  Swal.fire({ title: "Mendaftarkan akun...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-  try {
-    const res = await postApi({ action: "register", payload });
-    Swal.close();
-    if (res.status === "ok") {
-      Swal.fire("Berhasil", res.message, "success");
-      document.getElementById("register-form").reset();
-      switchAuthTab("login");
-    } else {
-      Swal.fire("Gagal", res.message, "warning");
+    async function postApi(body) {
+      const res = await fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify(body)
+      });
+      return res.json();
     }
-  } catch (err) {
-    Swal.fire("Error", err.message, "error");
-  }
-}
 
-function initSessionUI() {
-  document.getElementById("auth-screen").classList.add("hidden");
-  document.getElementById("app-shell").classList.remove("hidden");
-  document.getElementById("session-info").textContent =
-    `${currentUser.Nama} (${currentUser.Role}) • Exp: ${currentUser.Tanggal_Expired}`;
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      const payload = {
+        Email_Username: document.getElementById("login-username").value.trim(),
+        Password: document.getElementById("login-password").value
+      };
+      Swal.fire({ title: "Memeriksa akun...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+      try {
+        const res = await postApi({ action: "login", payload });
+        Swal.close();
+        if (res.status !== "ok") {
+          return Swal.fire("Akses Ditolak", res.message, "error");
+        }
+        currentUser = res.user;
+        initSessionUI();
+      } catch (err) {
+        Swal.fire("Error", "Gagal terhubung ke server: " + err.message, "error");
+      }
+    }
 
-  const nav = document.getElementById("nav-menu");
-  nav.innerHTML = "";
+    async function handleRegisterSubmit(e) {
+      e.preventDefault();
+      const payload = {
+        Nama: document.getElementById("reg-nama").value.trim(),
+        Email_Username: document.getElementById("reg-username").value.trim(),
+        Password: document.getElementById("reg-password").value,
+        Role: document.getElementById("reg-role").value
+      };
+      Swal.fire({ title: "Mendaftarkan akun...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+      try {
+        const res = await postApi({ action: "register", payload });
+        Swal.close();
+        if (res.status === "ok") {
+          Swal.fire("Berhasil", res.message, "success");
+          document.getElementById("register-form").reset();
+          switchAuthTab("login");
+        } else {
+          Swal.fire("Gagal", res.message, "warning");
+        }
+      } catch (err) {
+        Swal.fire("Error", err.message, "error");
+      }
+    }
 
-  const availableKeys = Object.keys(MENU_CONFIG).filter((key) => {
-    if (currentUser.Role === "Admin") return true;
-    return !MENU_CONFIG[key].adminOnly;
-  });
+    function initSessionUI() {
+      document.getElementById("auth-screen").classList.add("hidden");
+      document.getElementById("app-shell").classList.remove("hidden");
+      document.getElementById("session-info").textContent =
+        `${currentUser.Nama} (${currentUser.Role}) • Exp: ${currentUser.Tanggal_Expired}`;
 
-  availableKeys.forEach((key, index) => {
-    const btn = document.createElement("button");
-    btn.className = "nav-item" + (index === 0 ? " active" : "");
-    btn.dataset.sheet = key;
-    btn.textContent = MENU_CONFIG[key].label;
-    btn.onclick = () => selectSheet(key, btn);
-    nav.appendChild(btn);
-  });
+      const nav = document.getElementById("nav-menu");
+      nav.innerHTML = "";
 
-  if (availableKeys.length > 0) {
-    selectSheet(availableKeys[0], nav.firstChild);
-  }
-  refreshAllData();
-}
+      const availableKeys = Object.keys(MENU_CONFIG).filter((key) => {
+        if (currentUser.Role === "Admin") return true;
+        return !MENU_CONFIG[key].adminOnly;
+      });
 
-function selectSheet(sheetKey, btnEl) {
-  currentSheet = sheetKey;
-  document.querySelectorAll(".nav-item").forEach((el) => el.classList.remove("active"));
-  if (btnEl) btnEl.classList.add("active");
-  document.getElementById("active-menu-title").textContent = MENU_CONFIG[sheetKey].label;
-  document.getElementById("sidebar").classList.remove("open");
-  renderTable();
-}
+      availableKeys.forEach((key, index) => {
+        const btn = document.createElement("button");
+        btn.className = "nav-item" + (index === 0 ? " active" : "");
+        btn.dataset.sheet = key;
+        btn.textContent = MENU_CONFIG[key].label;
+        btn.onclick = () => selectSheet(key, btn);
+        nav.appendChild(btn);
+      });
 
-function toggleSidebar() {
-  document.getElementById("sidebar").classList.toggle("open");
-}
+      if (availableKeys.length > 0) {
+        selectSheet(availableKeys[0], nav.firstChild);
+      }
+      refreshAllData();
+    }
 
-function logout() {
-  currentUser = null;
-  dbCache = {};
-  document.getElementById("app-shell").classList.add("hidden");
-  document.getElementById("auth-screen").classList.remove("hidden");
-}
-
-async function refreshAllData() {
-  if (!currentUser) return;
-  try {
-    const url = `${WEB_APP_URL}?action=getAllData&role=${encodeURIComponent(currentUser.Role)}&t=${Date.now()}`;
-    const res = await fetch(url);
-    const json = await res.json();
-    if (json.status === "ok") {
-      dbCache = json.data;
+    function selectSheet(sheetKey, btnEl) {
+      currentSheet = sheetKey;
+      document.querySelectorAll(".nav-item").forEach((el) => el.classList.remove("active"));
+      if (btnEl) btnEl.classList.add("active");
+      document.getElementById("active-menu-title").textContent = MENU_CONFIG[sheetKey].label;
+      document.getElementById("sidebar").classList.remove("open");
       renderTable();
     }
-  } catch (err) {
-    console.error(err);
-  }
-}
 
-function renderTable() {
-  const container = document.getElementById("table-container");
-  if (!currentSheet) return;
-  const cfg = MENU_CONFIG[currentSheet];
-  const rows = dbCache[currentSheet] || [];
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+    }
 
-  const displayCols = cfg.fields.filter((f) => !(currentSheet === "Users" && f === "Password"));
-  let html = `<table><thead><tr>`;
-  displayCols.forEach((col) => {
-    html += `<th>${col.replaceAll("_", " ")}</th>`;
-  });
-  html += `<th>Aksi</th></tr></thead><tbody>`;
+    function logout() {
+      currentUser = null;
+      dbCache = {};
+      document.getElementById("app-shell").classList.add("hidden");
+      document.getElementById("auth-screen").classList.remove("hidden");
+    }
 
-  if (rows.length === 0) {
-    html += `<tr><td colspan="${displayCols.length + 1}">Belum ada data.</td></tr>`;
-  } else {
-    rows.forEach((row) => {
-      const idVal = row[cfg.idField];
-      html += `<tr>`;
+    async function refreshAllData() {
+      if (!currentUser) return;
+      try {
+        const url = `${WEB_APP_URL}?action=getAllData&role=${encodeURIComponent(currentUser.Role)}&t=${Date.now()}`;
+        const res = await fetch(url);
+        const json = await res.json();
+        if (json.status === "ok") {
+          dbCache = json.data;
+          renderTable();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderTable() {
+      const container = document.getElementById("table-container");
+      if (!currentSheet) return;
+      const cfg = MENU_CONFIG[currentSheet];
+      const rows = dbCache[currentSheet] || [];
+
+      const displayCols = cfg.fields.filter((f) => !(currentSheet === "Users" && f === "Password"));
+      let html = `<table><thead><tr>`;
       displayCols.forEach((col) => {
-        const val = row[col] ?? "";
-        if (String(val).startsWith("http")) {
-          html += `<td><img src="${val}" class="thumb-img" alt="${col}" /></td>`;
+        html += `<th>${col.replaceAll("_", " ")}</th>`;
+      });
+      html += `<th>Aksi</th></tr></thead><tbody>`;
+
+      if (rows.length === 0) {
+        html += `<tr><td colspan="${displayCols.length + 1}">Belum ada data.</td></tr>`;
+      } else {
+        rows.forEach((row) => {
+          const idVal = row[cfg.idField];
+          html += `<tr>`;
+          displayCols.forEach((col) => {
+            const val = row[col] ?? "";
+            if (String(val).startsWith("http")) {
+              html += `<td><img src="${val}" class="thumb-img" alt="${col}" /></td>`;
+            } else {
+              html += `<td>${escapeHtml(String(val))}</td>`;
+            }
+          });
+
+          html += `<td>`;
+          if (currentSheet === "Users" && currentUser.Role === "Admin") {
+            html += `<button class="btn-yellow small" onclick="approveUser('${idVal}')">Setujui</button> `;
+            html += `<button class="btn-sky small" onclick="extendUser('${idVal}')">Perpanjang 6 Bln</button> `;
+          }
+          if (currentSheet === "Riwayat_Lulus" && currentUser.Role === "Admin") {
+            html += `<button class="btn-yellow small" onclick="downloadCertificatePDF('${encodeURIComponent(JSON.stringify(row))}')">PDF A4 Sertifikat</button> `;
+          }
+          if (currentSheet === "Pembayaran_SPP" && currentUser.Role === "Admin") {
+            html += `<button class="btn-sky small" onclick="printInvoicePDF('${encodeURIComponent(JSON.stringify(row))}')">Cetak Invoice PDF</button> `;
+          }
+          if (currentUser.Role === "Admin") {
+            html += `<button class="btn-orange small" onclick="openFormModal('${idVal}')">Edit</button> `;
+            html += `<button class="btn-red small" onclick="deleteItem('${idVal}')">Hapus</button>`;
+          } else {
+            html += `<span class="badge-yellow">Input Guru</span>`;
+          }
+          html += `</td></tr>`;
+        });
+      }
+
+      html += `</tbody></table>`;
+      container.innerHTML = html;
+    }
+
+    function openFormModal(idValue = null) {
+      if (!currentSheet) return;
+      editingId = idValue;
+      const cfg = MENU_CONFIG[currentSheet];
+      const existing = idValue
+        ? (dbCache[currentSheet] || []).find((r) => String(r[cfg.idField]) === String(idValue))
+        : {};
+
+      document.getElementById("modal-title").textContent =
+        (idValue ? "Edit " : "Tambah ") + cfg.label;
+
+      const form = document.getElementById("dynamic-form");
+      let html = "";
+
+      cfg.fields.forEach((field) => {
+        const val = existing && existing[field] !== undefined ? existing[field] : "";
+        if (cfg.fileFields && cfg.fileFields.includes(field)) {
+          html += `
+            <div class="form-group">
+              <label>${field.replaceAll("_", " ")} (Upload Gambar)</label>
+              <input type="file" accept="image/*" data-file-field="${field}" />
+              <input type="hidden" name="${field}" value="${escapeAttr(String(val))}" />
+            </div>`;
+        } else if (field === "ID_Murid" && (dbCache.Data_Murid || []).length > 0) {
+          const opts = (dbCache.Data_Murid || [])
+            .map((m) => `<option value="${m.ID_Murid}" ${m.ID_Murid === val ? "selected" : ""}>${m.ID_Murid} - ${m.Nama_Lengkap}</option>`)
+            .join("");
+          html += `<div class="form-group"><label>ID Murid</label><select name="ID_Murid" onchange="syncMuridName(this)">${opts}</select></div>`;
+        } else if (field === "ID_Guru" && (dbCache.Data_Guru || []).length > 0) {
+          const opts = (dbCache.Data_Guru || [])
+            .map((g) => `<option value="${g.ID_Guru}" ${g.ID_Guru === val ? "selected" : ""}>${g.ID_Guru} - ${g.Nama_Guru}</option>`)
+            .join("");
+          html += `<div class="form-group"><label>ID Guru</label><select name="ID_Guru" onchange="syncGuruName(this)">${opts}</select></div>`;
+        } else if (field === "Tipe_Mutasi") {
+          html += `
+            <div class="form-group">
+              <label>Tipe Mutasi</label>
+              <select name="Tipe_Mutasi">
+                <option value="Masuk" ${val === "Masuk" ? "selected" : ""}>Masuk</option>
+                <option value="Keluar" ${val === "Keluar" ? "selected" : ""}>Keluar</option>
+              </select>
+            </div>`;
         } else {
-          html += `<td>${escapeHtml(String(val))}</td>`;
+          html += `
+            <div class="form-group">
+              <label>${field.replaceAll("_", " ")}</label>
+              <input type="text" name="${field}" value="${escapeAttr(String(val))}" />
+            </div>`;
         }
       });
 
-      html += `<td>`;
-      if (currentSheet === "Users" && currentUser.Role === "Admin") {
-        html += `<button class="btn-yellow small" onclick="approveUser('${idVal}')">Setujui</button> `;
-        html += `<button class="btn-sky small" onclick="extendUser('${idVal}')">Perpanjang 6 Bln</button> `;
-      }
-      if (currentSheet === "Riwayat_Lulus" && currentUser.Role === "Admin") {
-        html += `<button class="btn-yellow small" onclick="downloadCertificatePDF('${encodeURIComponent(JSON.stringify(row))}')">PDF A4 Sertifikat</button> `;
-      }
-      if (currentSheet === "Pembayaran_SPP" && currentUser.Role === "Admin") {
-        html += `<button class="btn-sky small" onclick="printInvoicePDF('${encodeURIComponent(JSON.stringify(row))}')">Cetak Invoice PDF</button> `;
-      }
-      if (currentUser.Role === "Admin") {
-        html += `<button class="btn-orange small" onclick="openFormModal('${idVal}')">Edit</button> `;
-        html += `<button class="btn-red small" onclick="deleteItem('${idVal}')">Hapus</button>`;
-      } else {
-        html += `<span class="badge-yellow">Input Guru</span>`;
-      }
-      html += `</td></tr>`;
-    });
-  }
-
-  html += `</tbody></table>`;
-  container.innerHTML = html;
-}
-
-function openFormModal(idValue = null) {
-  if (!currentSheet) return;
-  editingId = idValue;
-  const cfg = MENU_CONFIG[currentSheet];
-  const existing = idValue
-    ? (dbCache[currentSheet] || []).find((r) => String(r[cfg.idField]) === String(idValue))
-    : {};
-
-  document.getElementById("modal-title").textContent =
-    (idValue ? "Edit " : "Tambah ") + cfg.label;
-
-  const form = document.getElementById("dynamic-form");
-  let html = "";
-
-  cfg.fields.forEach((field) => {
-    const val = existing && existing[field] !== undefined ? existing[field] : "";
-    if (cfg.fileFields && cfg.fileFields.includes(field)) {
-      html += `
-        <div class="form-group">
-          <label>${field.replaceAll("_", " ")} (Upload Gambar)</label>
-          <input type="file" accept="image/*" data-file-field="${field}" />
-          <input type="hidden" name="${field}" value="${escapeAttr(String(val))}" />
-        </div>`;
-    } else if (field === "ID_Murid" && (dbCache.Data_Murid || []).length > 0) {
-      const opts = (dbCache.Data_Murid || [])
-        .map((m) => `<option value="${m.ID_Murid}" ${m.ID_Murid === val ? "selected" : ""}>${m.ID_Murid} - ${m.Nama_Lengkap}</option>`)
-        .join("");
-      html += `<div class="form-group"><label>ID Murid</label><select name="ID_Murid" onchange="syncMuridName(this)">${opts}</select></div>`;
-    } else if (field === "ID_Guru" && (dbCache.Data_Guru || []).length > 0) {
-      const opts = (dbCache.Data_Guru || [])
-        .map((g) => `<option value="${g.ID_Guru}" ${g.ID_Guru === val ? "selected" : ""}>${g.ID_Guru} - ${g.Nama_Guru}</option>`)
-        .join("");
-      html += `<div class="form-group"><label>ID Guru</label><select name="ID_Guru" onchange="syncGuruName(this)">${opts}</select></div>`;
-    } else if (field === "Tipe_Mutasi") {
-      html += `
-        <div class="form-group">
-          <label>Tipe Mutasi</label>
-          <select name="Tipe_Mutasi">
-            <option value="Masuk" ${val === "Masuk" ? "selected" : ""}>Masuk</option>
-            <option value="Keluar" ${val === "Keluar" ? "selected" : ""}>Keluar</option>
-          </select>
-        </div>`;
-    } else {
-      html += `
-        <div class="form-group">
-          <label>${field.replaceAll("_", " ")}</label>
-          <input type="text" name="${field}" value="${escapeAttr(String(val))}" />
-        </div>`;
+      html += `<button type="submit" class="btn-orange full-width">Simpan Data</button>`;
+      form.innerHTML = html;
+      document.getElementById("form-modal").classList.remove("hidden");
     }
-  });
 
-  html += `<button type="submit" class="btn-orange full-width">Simpan Data</button>`;
-  form.innerHTML = html;
-  document.getElementById("form-modal").classList.remove("hidden");
-}
-
-function syncMuridName(selectEl) {
-  const murid = (dbCache.Data_Murid || []).find((m) => String(m.ID_Murid) === String(selectEl.value));
-  const nameInput = document.querySelector('#dynamic-form input[name="Nama_Murid"]');
-  if (murid && nameInput) nameInput.value = murid.Nama_Lengkap;
-}
-
-function syncGuruName(selectEl) {
-  const guru = (dbCache.Data_Guru || []).find((g) => String(g.ID_Guru) === String(selectEl.value));
-  const nameInput = document.querySelector('#dynamic-form input[name="Nama_Guru"]');
-  if (guru && nameInput) nameInput.value = guru.Nama_Guru;
-}
-
-function closeFormModal() {
-  document.getElementById("form-modal").classList.add("hidden");
-  editingId = null;
-}
-
-async function submitDynamicForm(e) {
-  e.preventDefault();
-  const cfg = MENU_CONFIG[currentSheet];
-  const form = e.target;
-  const payload = {};
-
-  new FormData(form).forEach((v, k) => {
-    payload[k] = v;
-  });
-
-  const fileInputs = form.querySelectorAll('input[type="file"][data-file-field]');
-  for (const input of fileInputs) {
-    if (input.files && input.files[0]) {
-      const fieldName = input.dataset.fileField;
-      payload[fieldName] = await fileToBase64(input.files[0]);
+    function syncMuridName(selectEl) {
+      const murid = (dbCache.Data_Murid || []).find((m) => String(m.ID_Murid) === String(selectEl.value));
+      const nameInput = document.querySelector('#dynamic-form input[name="Nama_Murid"]');
+      if (murid && nameInput) nameInput.value = murid.Nama_Lengkap;
     }
-  }
 
-  Swal.fire({ title: "Menyimpan...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-  try {
-    const action = editingId ? "updateRecord" : "createRecord";
-    const res = await postApi({
-      action,
-      sheetName: currentSheet,
-      idField: cfg.idField,
-      idValue: editingId,
-      payload
-    });
-    Swal.close();
-    if (res.status === "ok") {
-      closeFormModal();
-      Swal.fire("Tersimpan", res.message, "success");
+    function syncGuruName(selectEl) {
+      const guru = (dbCache.Data_Guru || []).find((g) => String(g.ID_Guru) === String(selectEl.value));
+      const nameInput = document.querySelector('#dynamic-form input[name="Nama_Guru"]');
+      if (guru && nameInput) nameInput.value = guru.Nama_Guru;
+    }
+
+    function closeFormModal() {
+      document.getElementById("form-modal").classList.add("hidden");
+      editingId = null;
+    }
+
+    async function submitDynamicForm(e) {
+      e.preventDefault();
+      const cfg = MENU_CONFIG[currentSheet];
+      const form = e.target;
+      const payload = {};
+
+      new FormData(form).forEach((v, k) => {
+        payload[k] = v;
+      });
+
+      const fileInputs = form.querySelectorAll('input[type="file"][data-file-field]');
+      for (const input of fileInputs) {
+        if (input.files && input.files[0]) {
+          const fieldName = input.dataset.fileField;
+          payload[fieldName] = await fileToBase64(input.files[0]);
+        }
+      }
+
+      Swal.fire({ title: "Menyimpan...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+      try {
+        const action = editingId ? "updateRecord" : "createRecord";
+        const res = await postApi({
+          action,
+          sheetName: currentSheet,
+          idField: cfg.idField,
+          idValue: editingId,
+          payload
+        });
+        Swal.close();
+        if (res.status === "ok") {
+          closeFormModal();
+          Swal.fire("Tersimpan", res.message, "success");
+          await refreshAllData();
+        } else {
+          Swal.fire("Gagal", res.message, "error");
+        }
+      } catch (err) {
+        Swal.fire("Error", err.message, "error");
+      }
+    }
+
+    async function deleteItem(idValue) {
+      const confirm = await Swal.fire({
+        title: "Hapus data ini?",
+        text: "Tindakan ini akan menghapus baris dari Google Sheets.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Ya, Hapus",
+        cancelButtonText: "Batal"
+      });
+      if (!confirm.isConfirmed) return;
+
+      const cfg = MENU_CONFIG[currentSheet];
+      const res = await postApi({
+        action: "deleteRecord",
+        sheetName: currentSheet,
+        idField: cfg.idField,
+        idValue
+      });
+      if (res.status === "ok") {
+        Swal.fire("Terhapus", res.message, "success");
+        await refreshAllData();
+      }
+    }
+
+    async function approveUser(idUser) {
+      const res = await postApi({ action: "approveUser", idUser });
+      Swal.fire(res.status === "ok" ? "Disetujui" : "Info", res.message, res.status === "ok" ? "success" : "info");
       await refreshAllData();
-    } else {
-      Swal.fire("Gagal", res.message, "error");
     }
-  } catch (err) {
-    Swal.fire("Error", err.message, "error");
-  }
-}
 
-async function deleteItem(idValue) {
-  const confirm = await Swal.fire({
-    title: "Hapus data ini?",
-    text: "Tindakan ini akan menghapus baris dari Google Sheets.",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Ya, Hapus",
-    cancelButtonText: "Batal"
-  });
-  if (!confirm.isConfirmed) return;
+    async function extendUser(idUser) {
+      const res = await postApi({ action: "extendUser", idUser });
+      Swal.fire(res.status === "ok" ? "Diperpanjang" : "Info", res.message, res.status === "ok" ? "success" : "info");
+      await refreshAllData();
+    }
 
-  const cfg = MENU_CONFIG[currentSheet];
-  const res = await postApi({
-    action: "deleteRecord",
-    sheetName: currentSheet,
-    idField: cfg.idField,
-    idValue
-  });
-  if (res.status === "ok") {
-    Swal.fire("Terhapus", res.message, "success");
-    await refreshAllData();
-  }
-}
-
-async function approveUser(idUser) {
-  const res = await postApi({ action: "approveUser", idUser });
-  Swal.fire(res.status === "ok" ? "Disetujui" : "Info", res.message, res.status === "ok" ? "success" : "info");
-  await refreshAllData();
-}
-
-async function extendUser(idUser) {
-  const res = await postApi({ action: "extendUser", idUser });
-  Swal.fire(res.status === "ok" ? "Diperpanjang" : "Info", res.message, res.status === "ok" ? "success" : "info");
-  await refreshAllData();
-}
-
-function downloadCertificatePDF(encodedRow) {
-  const row = JSON.parse(decodeURIComponent(encodedRow));
-  const staging = document.getElementById("print-staging");
-  staging.innerHTML = `
-    <div id="cert-doc" style="width:297mm;height:210mm;padding:24px;border:12px solid #38BDF8;background:#FFFFFF;text-align:center;position:relative;">
-      <div style="border:4px solid #FACC15;height:100%;padding:28px;display:flex;flex-direction:column;justify-content:space-between;">
-        <div>
-          <div style="font-size:16px;font-weight:700;color:#EA580C;letter-spacing:2px;">BINTANG JUNIOR — UNIT TOP PUTRA</div>
-          <h1 style="font-size:38px;color:#0284C7;margin:10px 0;">SERTIFIKAT KELULUSAN</h1>
-          <p style="font-size:14px;color:#475569;">No. Sertifikat: <strong>${escapeHtml(String(row.No_Sertifikat || "-"))}</strong></p>
+    function downloadCertificatePDF(encodedRow) {
+      const row = JSON.parse(decodeURIComponent(encodedRow));
+      const staging = document.getElementById("print-staging");
+      staging.innerHTML = `
+        <div id="cert-doc" style="width:297mm;height:210mm;padding:24px;border:12px solid #38BDF8;background:#FFFFFF;text-align:center;position:relative;">
+          <div style="border:4px solid #FACC15;height:100%;padding:28px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <div style="font-size:16px;font-weight:700;color:#EA580C;letter-spacing:2px;">BINTANG JUNIOR — UNIT TOP PUTRA</div>
+              <h1 style="font-size:38px;color:#0284C7;margin:10px 0;">SERTIFIKAT KELULUSAN</h1>
+              <p style="font-size:14px;color:#475569;">No. Sertifikat: <strong>${escapeHtml(String(row.No_Sertifikat || "-"))}</strong></p>
+            </div>
+            <div>
+              <p style="font-size:16px;">Diberikan kepada:</p>
+              <h2 style="font-size:32px;color:#0F172A;margin:8px 0;text-decoration:underline;">${escapeHtml(String(row.Nama_Lengkap || "-"))}</h2>
+              <p style="font-size:16px;">Telah menyelesaikan pembelajaran hingga <strong>${escapeHtml(String(row.Level_Terakhir || "-"))}</strong> dengan predikat <strong>${escapeHtml(String(row.Predikat || "-"))}</strong>.</p>
+              ${row.Photo ? `<img src="${row.Photo}" style="width:95px;height:115px;object-fit:cover;border-radius:8px;margin-top:12px;border:2px solid #38BDF8;" />` : ""}
+            </div>
+            <div style="font-size:14px;color:#334155;">
+              Tanggal Kelulusan: <strong>${escapeHtml(String(row.Tanggal_Lulus || "-"))}</strong> • Catatan: ${escapeHtml(String(row.Catatan_Kelulusan || "-"))}
+            </div>
+          </div>
         </div>
-        <div>
-          <p style="font-size:16px;">Diberikan kepada:</p>
-          <h2 style="font-size:32px;color:#0F172A;margin:8px 0;text-decoration:underline;">${escapeHtml(String(row.Nama_Lengkap || "-"))}</h2>
-          <p style="font-size:16px;">Telah menyelesaikan pembelajaran hingga <strong>${escapeHtml(String(row.Level_Terakhir || "-"))}</strong> dengan predikat <strong>${escapeHtml(String(row.Predikat || "-"))}</strong>.</p>
-          ${row.Photo ? `<img src="${row.Photo}" style="width:95px;height:115px;object-fit:cover;border-radius:8px;margin-top:12px;border:2px solid #38BDF8;" />` : ""}
-        </div>
-        <div style="font-size:14px;color:#334155;">
-          Tanggal Kelulusan: <strong>${escapeHtml(String(row.Tanggal_Lulus || "-"))}</strong> • Catatan: ${escapeHtml(String(row.Catatan_Kelulusan || "-"))}
-        </div>
-      </div>
-    </div>
-  `;
-  const el = document.getElementById("cert-doc");
-  html2pdf().set({
-    margin: 0,
-    filename: `Sertifikat_${row.Nama_Lengkap || "Siswa"}.pdf`,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: "mm", format: "a4", orientation: "landscape" }
-  }).from(el).save();
-}
+      `;
+      const el = document.getElementById("cert-doc");
+      html2pdf().set({
+        margin: 0,
+        filename: `Sertifikat_${row.Nama_Lengkap || "Siswa"}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "landscape" }
+      }).from(el).save();
+    }
 
-function printInvoicePDF(encodedRow) {
-  const row = JSON.parse(decodeURIComponent(encodedRow));
-  const staging = document.getElementById("print-staging");
-  staging.innerHTML = `
-    <div id="inv-doc" style="width:210mm;padding:28px;background:#FFFFFF;border:2px solid #38BDF8;color:#0F172A;">
-      <div style="display:flex;justify-content:space-between;border-bottom:3px solid #FB923C;padding-bottom:12px;">
-        <div>
-          <h2 style="color:#0284C7;">BINTANG JUNIOR — UNIT TOP PUTRA</h2>
-          <p style="font-size:13px;">Kuitansi / Invoice Pembayaran SPP</p>
+    function printInvoicePDF(encodedRow) {
+      const row = JSON.parse(decodeURIComponent(encodedRow));
+      const staging = document.getElementById("print-staging");
+      staging.innerHTML = `
+        <div id="inv-doc" style="width:210mm;padding:28px;background:#FFFFFF;border:2px solid #38BDF8;color:#0F172A;">
+          <div style="display:flex;justify-content:space-between;border-bottom:3px solid #FB923C;padding-bottom:12px;">
+            <div>
+              <h2 style="color:#0284C7;">BINTANG JUNIOR — UNIT TOP PUTRA</h2>
+              <p style="font-size:13px;">Kuitansi / Invoice Pembayaran SPP</p>
+            </div>
+            <div style="text-align:right;font-size:13px;">
+              <div>No: <strong>${escapeHtml(String(row.No_Kuitansi || "-"))}</strong></div>
+              <div>Tanggal: <strong>${escapeHtml(String(row.Tanggal_Bayar || "-"))}</strong></div>
+            </div>
+          </div>
+          <table style="width:100%;margin-top:20px;border-collapse:collapse;font-size:14px;">
+            <tr><td style="padding:8px;border:1px solid #BAE6FD;"><strong>ID / Nama Murid</strong></td><td style="padding:8px;border:1px solid #BAE6FD;">${escapeHtml(String(row.ID_Murid || ""))} — ${escapeHtml(String(row.Nama_Murid || ""))}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #BAE6FD;"><strong>Jenis & Bulan</strong></td><td style="padding:8px;border:1px solid #BAE6FD;">${escapeHtml(String(row.Jenis_Pembayaran || ""))} (${escapeHtml(String(row.Untuk_Bulan || ""))})</td></tr>
+            <tr><td style="padding:8px;border:1px solid #BAE6FD;"><strong>Metode & Status</strong></td><td style="padding:8px;border:1px solid #BAE6FD;">${escapeHtml(String(row.Metode_Bayar || ""))} — <strong>${escapeHtml(String(row.Status_Bayar || ""))}</strong></td></tr>
+            <tr><td style="padding:8px;border:1px solid #BAE6FD;"><strong>Nominal Bayar</strong></td><td style="padding:8px;border:1px solid #BAE6FD;font-size:18px;font-weight:700;color:#EA580C;">Rp ${Number(row.Nominal || 0).toLocaleString("id-ID")}</td></tr>
+          </table>
         </div>
-        <div style="text-align:right;font-size:13px;">
-          <div>No: <strong>${escapeHtml(String(row.No_Kuitansi || "-"))}</strong></div>
-          <div>Tanggal: <strong>${escapeHtml(String(row.Tanggal_Bayar || "-"))}</strong></div>
-        </div>
-      </div>
-      <table style="width:100%;margin-top:20px;border-collapse:collapse;font-size:14px;">
-        <tr><td style="padding:8px;border:1px solid #BAE6FD;"><strong>ID / Nama Murid</strong></td><td style="padding:8px;border:1px solid #BAE6FD;">${escapeHtml(String(row.ID_Murid || ""))} — ${escapeHtml(String(row.Nama_Murid || ""))}</td></tr>
-        <tr><td style="padding:8px;border:1px solid #BAE6FD;"><strong>Jenis & Bulan</strong></td><td style="padding:8px;border:1px solid #BAE6FD;">${escapeHtml(String(row.Jenis_Pembayaran || ""))} (${escapeHtml(String(row.Untuk_Bulan || ""))})</td></tr>
-        <tr><td style="padding:8px;border:1px solid #BAE6FD;"><strong>Metode & Status</strong></td><td style="padding:8px;border:1px solid #BAE6FD;">${escapeHtml(String(row.Metode_Bayar || ""))} — <strong>${escapeHtml(String(row.Status_Bayar || ""))}</strong></td></tr>
-        <tr><td style="padding:8px;border:1px solid #BAE6FD;"><strong>Nominal Bayar</strong></td><td style="padding:8px;border:1px solid #BAE6FD;font-size:18px;font-weight:700;color:#EA580C;">Rp ${Number(row.Nominal || 0).toLocaleString("id-ID")}</td></tr>
-      </table>
-    </div>
-  `;
-  const el = document.getElementById("inv-doc");
-  html2pdf().set({
-    margin: 10,
-    filename: `Invoice_${row.No_Kuitansi || "SPP"}.pdf`,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-  }).from(el).save();
-}
+      `;
+      const el = document.getElementById("inv-doc");
+      html2pdf().set({
+        margin: 10,
+        filename: `Invoice_${row.No_Kuitansi || "SPP"}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+      }).from(el).save();
+    }
 
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
 
-function escapeHtml(str) {
-  return str.replace(/[&<>"']/g, (m) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  }[m]));
-}
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, (m) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[m]));
+    }
 
-function escapeAttr(str) {
-  return str.replace(/"/g, "&quot;");
-}
+    function escapeAttr(str) {
+      return str.replace(/"/g, "&quot;");
+    }
+  </script>
+</body>
+</html>
